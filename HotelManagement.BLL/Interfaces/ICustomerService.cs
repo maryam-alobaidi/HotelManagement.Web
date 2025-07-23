@@ -19,7 +19,7 @@ namespace HotelManagement.BLL.Interfaces
 
         Task<Customer> GetCustomerByIdAsync(int id);
         Task<IEnumerable<Customer>> GetAllCustomersAsync();
-        Task AddCustomerAsync(Customer customer);
+        Task<int?> AddCustomerAsync(Customer customer);
         Task<bool> UpdateCustomerAsync(Customer customer);
         Task<bool> DeleteCustomerAsync(int id);   
 

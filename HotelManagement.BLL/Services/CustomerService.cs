@@ -12,7 +12,7 @@ public class CustomerService : ICustomerService
         _customerRepository = customerRepository;
     }
 
-    public async Task AddCustomerAsync(Customer customer)
+    public async Task<int?> AddCustomerAsync(Customer customer)
     {
         Customer existingCustomer = await  _customerRepository.GetByEmailAsync(customer.Email);
 
@@ -21,7 +21,7 @@ public class CustomerService : ICustomerService
             throw new InvalidOperationException("Customer with this email already exists.");
         }
 
-        await _customerRepository.AddAsync(customer);
+      return  await _customerRepository.AddAsync(customer);
     }
    
     public async Task<bool> DeleteCustomerAsync(int id)

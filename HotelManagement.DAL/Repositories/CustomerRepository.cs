@@ -2,7 +2,7 @@
 using HotelManagement.Domain.Entities;
 using HotelManagement.Infrastructure.DAL.Repositories;
 using Microsoft.Data.SqlClient;
-using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 using System.Data;
 
 
@@ -11,28 +11,44 @@ namespace HotelManagement.DAL.Repositories
     public class CustomerRepository : ICustomerRepository
     {
         private readonly string _connectionString;
-        public CustomerRepository(string connectionString)
+        private readonly ILogger<CustomerRepository> _logger;
+        public CustomerRepository(string connectionString, ILogger<CustomerRepository> logger)
         { 
             if (string.IsNullOrWhiteSpace(connectionString)) throw new ArgumentException("Connection string cannot be null or empty.", nameof(connectionString));
 
             _connectionString = connectionString;
+            _logger = logger;
 
         }
 
         public async Task<int?> AddAsync(Customer customer)
         {
-            using (SqlCommand command = new SqlCommand("Sp_AddNewCustomers"))
+            using (SqlCommand command = new SqlCommand("Sp_AddNewCustomer"))
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@Firstname", customer. Firstname);
                 command.Parameters.AddWithValue("@Lastname", customer. Lastname);
                 command.Parameters.AddWithValue("@Email", customer. Email);
                 command.Parameters.AddWithValue("@PhoneNumber", customer. PhoneNumber);
-                command.Parameters.AddWithValue("@Address", customer. Address);
+                command.Parameters.AddWithValue("@Address", (object)customer.Address ?? DBNull.Value);
                 command.Parameters.AddWithValue("@Nationality", customer. Nationality);
                 command.Parameters.AddWithValue("@IDNumber", customer. IDNumber);
                 command.Parameters.AddWithValue("@CustomerID", SqlDbType.Int).Direction = ParameterDirection.Output;
-                return await PrimaryFunctions.AddAsync(command, _connectionString, "@CustomerID");
+                try
+                {
+                    return await PrimaryFunctions.AddAsync(command, _connectionString, "@CustomerID");
+                }
+                catch (SqlException ex)
+                {
+                    // تسجيل الخطأ هنا باستخدام ILogger
+                    _logger.LogError(ex, "SQL Error adding customer. Command: {CommandText}, Customer Email: {Email}", command.CommandText, customer.Email);
+                    throw; // إعادة رمي الاستثناء ليتم التعامل معه في طبقة الخدمة أو المتحكم
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "General Error adding customer. Customer Email: {Email}", customer.Email);
+                    throw;
+                }
             }
         }
 
@@ -42,7 +58,21 @@ namespace HotelManagement.DAL.Repositories
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@CustomerID", id);
-              return  await  PrimaryFunctions.DeleteAsync(command, _connectionString);
+                try
+                {
+                    return await PrimaryFunctions.DeleteAsync(command, _connectionString);
+                }
+                catch (SqlException ex)
+                {
+                    // تسجيل الخطأ هنا باستخدام ILogger
+                    _logger.LogError(ex, "SQL Error deleting customer with ID: {CustomerID}", id);
+                    throw; // إعادة رمي الاستثناء ليتم التعامل معه في طبقة الخدمة أو المتحكم
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "General Error deleting customer with ID: {CustomerID}", id);
+                    throw;
+                }
             }
         }
 
@@ -53,12 +83,12 @@ namespace HotelManagement.DAL.Repositories
             {
 
                 command.CommandType = CommandType.StoredProcedure;
-               SqlDataReader reader=    await PrimaryFunctions.GetAsync(command, _connectionString);
+                SqlDataReader reader= await PrimaryFunctions.GetAsync(command, _connectionString);
                 while (reader.Read())
                 {
                  customers.Add(MapToCustomer(reader));
                 }
-               
+                // CommandBehavior.CloseConnection ->> closes the connection when the reader is closed.
             }
             return customers;
         }
@@ -111,7 +141,7 @@ namespace HotelManagement.DAL.Repositories
                 command.Parameters.AddWithValue("@Lastname", customer.Lastname);
                 command.Parameters.AddWithValue("@Email", customer.Email);
                 command.Parameters.AddWithValue("@PhoneNumber", customer.PhoneNumber);
-                command.Parameters.AddWithValue("@Address", customer.Address);
+                command.Parameters.AddWithValue("@Address", (object)customer.Address ?? DBNull.Value);
                 command.Parameters.AddWithValue("@Nationality", customer.Nationality);
                 command.Parameters.AddWithValue("@IDNumber", customer.IDNumber);
 
@@ -124,13 +154,12 @@ namespace HotelManagement.DAL.Repositories
                 }
                 catch (SqlException sqlEx)
                 {
-
-                    if (sqlEx.Message.Contains("No Customer ID found with the provided ID to update.") ||
-                             sqlEx.Message.Contains("No records found to update for the provided ID."))
-                    {
-                        return false;
-                    }
-
+                   _logger.LogError(sqlEx, "SQL Error updating customer with ID: {CustomerID}", customer.CustomerID);
+                    throw; // إعادة رمي الاستثناء ليتم التعامل معه في طبقة الخدمة أو المتحكم
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "General Error updating customer with ID: {CustomerID}", customer.CustomerID);
                     throw;
                 }
             }

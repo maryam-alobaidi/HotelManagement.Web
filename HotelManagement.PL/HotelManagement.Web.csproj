@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HotelManagement.BLL\HotelManagement.BLL.csproj" />
-    <ProjectReference Include="..\HotelManagement.DAL\HotelManagement.Infrastructure.DAL.csproj" />
+    <ProjectReference Include="..\HotelManagement.BLL\HotelManagement.DBL.csproj" />
+    <ProjectReference Include="..\HotelManagement.Domain\HotelManagement.Domain.csproj" />
   </ItemGroup>
 
 </Project>
