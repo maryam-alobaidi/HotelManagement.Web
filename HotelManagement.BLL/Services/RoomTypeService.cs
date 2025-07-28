@@ -1,7 +1,7 @@
 using HotelManagement.BLL.Interfaces;
 using HotelManagement.Domain.Entities;
 using HotelManagement.Infrastructure.DAL.Interfaces;
-using HotelManagement.Infrastructure.DAL.Repositories;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 namespace HotelManagement.BLL.Services
@@ -30,14 +30,14 @@ namespace HotelManagement.BLL.Services
             }
             try
             {
-              return  await _roomTypesRepository.DeleteAsync(roomTypeID);
+                return await _roomTypesRepository.DeleteAsync(roomTypeID);
             }
             catch (Exception ex)
             {
                 throw new Exception($"Failed to delete room type with ID {roomTypeID}.", ex);
             }
 
-          
+
         }
 
         public async Task<IEnumerable<RoomType>> GetAllRoomTypesAsync()
@@ -58,14 +58,20 @@ namespace HotelManagement.BLL.Services
             }
             try
             {
-              return  await _roomTypesRepository.UpdateAsync(roomType);
+                return await _roomTypesRepository.UpdateAsync(roomType);
             }
             catch (Exception ex)
             {
                 throw new Exception($"Failed to Update room type with ID {roomType.RoomTypeID}.", ex);
             }
-
-          
         }
+
+
+        public async Task<IEnumerable<SelectListItem>> GetAllRoomTypesAsSelectListAsync()
+        {
+            return await _roomTypesRepository.GetAllRoomTypesAsSelectListAsync();
+        }
+
+     
     }
 }

@@ -1,15 +1,9 @@
 ﻿using HotelManagement.Domain.Validation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelManagement.Domain.Entities
 {
     public class Customer
     {
-
         public int CustomerID { get;private set; }
         public  string Firstname { get; private set; }
         public  string Lastname { get; private set; }

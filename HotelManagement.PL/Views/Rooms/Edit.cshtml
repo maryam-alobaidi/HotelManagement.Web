@@ -1,0 +1,73 @@
+﻿@model HotelManagement.Web.Models.ViewModels.RoomModel.RoomEditViewModel
+
+@{
+    ViewData["Title"] = "Edit Room";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Edit Room</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit" method="post">
+                @* This displays any validation errors that are not tied to a specific field *@
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                @* Hidden field for RoomID: CRUCIAL for identifying the room being edited in the POST action *@
+                <input type="hidden" asp-for="RoomID" />
+
+                <div class="mb-3">
+                    <label asp-for="RoomNumber" class="form-label"></label>
+                    <input asp-for="RoomNumber" class="form-control" />
+                    @* Displays validation errors for the RoomNumber field *@
+                    <span asp-validation-for="RoomNumber" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="BedCount" class="form-label"></label>
+                    <input asp-for="BedCount" class="form-control" />
+                    <span asp-validation-for="BedCount" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="RoomTypeID" class="form-label"></label>
+                    <select asp-for="RoomTypeID" asp-items="Model.RoomTypes" class="form-select">
+                        <option value="">-- Select Room Type --</option>
+                    </select>
+                    <span asp-validation-for="RoomTypeID" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="PricePerNight" class="form-label"></label>
+                    <input asp-for="PricePerNight" class="form-control" />
+                    <span asp-validation-for="PricePerNight" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="RoomStatusID" class="form-label"></label>
+                    <select asp-for="RoomStatusID" asp-items="Model.RoomStatuses" class="form-select">
+                        <option value="">-- Select Room Status --</option>
+                    </select>
+                    <span asp-validation-for="RoomStatusID" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        // This renders the client-side validation scripts.
+        // It's usually found in Shared/_ValidationScriptsPartial.cshtml
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,76 @@
+﻿@model IEnumerable<HotelManagement.Web.Models.ViewModels.RoomModel.RoomViewModel>
+
+@{
+    ViewData["Title"] = "Room List";
+}
+
+<h1>Room List</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Room</a>
+</p>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info" role="alert">
+        No rooms available.
+    </div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.RoomID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RoomNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BedCount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RoomTypeName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PricePerNight)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.RoomStatusName)
+                </th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RoomID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RoomNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BedCount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RoomTypeName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PricePerNight)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RoomStatusName)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.RoomID" class="btn btn-sm btn-info">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.RoomID" class="btn btn-sm btn-secondary">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.RoomID" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

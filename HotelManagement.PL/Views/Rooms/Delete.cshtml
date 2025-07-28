@@ -1,0 +1,80 @@
+﻿@model HotelManagement.Web.Models.ViewModels.RoomModel.RoomViewModel
+
+@{
+    ViewData["Title"] = "Delete Room";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4 text-danger">Delete Room</h1>
+    <h3>Are you sure you want to delete this room?</h3>
+
+    @* Display general validation errors (e.g., from ModelState.AddModelError) *@
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div>
+        <h4>Room Details</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.RoomID)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.RoomID)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.RoomNumber)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.RoomNumber)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.BedCount)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.BedCount)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.RoomTypeName)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.RoomTypeName)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.PricePerNight)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.PricePerNight)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.RoomStatusName)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.RoomStatusName)
+            </dd>
+        </dl>
+
+        <form asp-action="Delete" method="post">
+            @* Hidden field to pass the ID back to the POST action *@
+            <input type="hidden" asp-for="RoomID" />
+
+            @* Anti-forgery token for security *@
+            @Html.AntiForgeryToken()
+
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash-alt"></i> Confirm Delete
+            </button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+@* No specific client-side validation scripts are usually needed for a simple delete confirmation *@
+}

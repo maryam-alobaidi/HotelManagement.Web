@@ -1,18 +1,23 @@
-using HotelManagement.BLL.Interfaces;
+﻿using HotelManagement.BLL.Interfaces;
 using HotelManagement.Domain.Entities;
 using HotelManagement.Infrastructure.DAL.Repositories;
 using HotelManagement.Infrastructure.DAL.Interfaces;
 using System.Security.AccessControl;
+using Microsoft.AspNetCore.Mvc.Rendering;
 namespace HotelManagement.BLL.Services;
 
 public class RoomService : IRoomService
 {
 
     private readonly IRoomRepository _roomRepository;
+    private readonly IRoomTypesRepository _roomTypesRepository;
+    private readonly IRoomStatusesRepository _roomStatusesRepository;
 
-    public RoomService(IRoomRepository roomRepository)
+    public RoomService(IRoomRepository roomRepository,IRoomTypesRepository roomTypesRepository, IRoomStatusesRepository roomStatusesRepository)
     {
         _roomRepository = roomRepository;
+        _roomTypesRepository = roomTypesRepository ?? throw new ArgumentNullException(nameof(roomTypesRepository));
+        _roomStatusesRepository = roomStatusesRepository;
     }
 
     public async Task<int?> AddNewRoomAsync(Room room)
@@ -72,6 +77,35 @@ public class RoomService : IRoomService
        return await _roomRepository.GetAllAsync();
     }
 
+    public async Task<IEnumerable<SelectListItem>> GetAllRoomTypesAsSelectListItemsAsync()
+    {
+        // 1. Get the raw RoomType entities from the repository
+        IEnumerable<RoomType> roomTypes = await _roomTypesRepository.GetAllRoomTypesAsync();
+
+        // 2. Transform RoomType entities into SelectListItem objects
+        // Order them by name for a better user experience in the dropdown
+        var selectListItems = roomTypes
+            .Select(rt => new SelectListItem
+            {
+                Value = rt.RoomTypeID.ToString(), // The ID that will be submitted
+                Text = rt.TypeName                // The text displayed in the dropdown
+            })
+            .OrderBy(item => item.Text) // Order alphabetically by display text
+            .ToList();
+
+        return selectListItems;
+    }
+
+    public async Task<IEnumerable<SelectListItem>> GetAllRoomStatusesAsSelectListItemsAsync()
+    {
+        var roomStatuses = await _roomStatusesRepository.GetAllRoomStatusesAsync(); // تجلب كيانات RoomStatus
+        return roomStatuses.Select(rs => new SelectListItem
+        {
+            Value = rs.RoomStatusID.ToString(),
+            Text = rs.StatusName
+        }).OrderBy(item => item.Text).ToList(); 
+    }
+
     //public Task<IEnumerable<Room>> GetAvailableRoomsAsync(DateTime startDate, DateTime endDate)
     //{
     //    throw new NotImplementedException();
@@ -87,7 +121,7 @@ public class RoomService : IRoomService
     //    throw new NotImplementedException();
     //}
 
-  
+
 
 
 }

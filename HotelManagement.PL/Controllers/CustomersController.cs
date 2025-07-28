@@ -22,6 +22,7 @@ namespace HotelManagement.Web.Controllers
             var customers = await _customerService.GetAllCustomersAsync();
             if (customers == null || !customers.Any())
             {
+                _logger.LogWarning("Index: No customers found.");
                 return View("no customers");
             }
 
@@ -72,7 +73,14 @@ namespace HotelManagement.Web.Controllers
             return View(customerViewModel);
         }
 
-  
+
+
+        [HttpGet] 
+        public IActionResult Create()
+        {
+            return View(); // This returns the Create.cshtml view with an empty CustomerViewModel
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CustomerViewModel model)
@@ -110,51 +118,6 @@ namespace HotelManagement.Web.Controllers
         }
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CustomerViewModel model)
-        {
-            if (id != model.CustomerID)
-            {
-                return BadRequest("Customer ID mismatch.");
-            }
-
-            if (model == null)
-            {
-                return BadRequest("Customer data is null.");
-            }
-            if (ModelState.IsValid)
-            {
-                return View(model); // If the model state is invalid, return the view with the current model to show validation errors.
-            }
-
-            try
-            {
-                var customer = new Customer(
-               customerID: model.CustomerID,
-               firstname: model.Firstname,
-               lastname: model.Lastname,
-               email: model.Email,
-               phoneNumber: model.PhoneNumber,
-               address: model.Address,
-               nationality: model.Nationality,
-               iDNumber: model.IDNumber
-                );
-
-                // Update the customerExisting using the service
-                await _customerService.UpdateCustomerAsync(customer);
-
-                return RedirectToAction(nameof(Index));//"Go and make a new request to the Index action of the current controller."
-            }
-            catch (Exception ex)
-            {
-                // Add a generic error message to ModelState for display on the form
-                ModelState.AddModelError("", "An unexpected error occurred while saving your changes. Please try again.");
-
-                return View(model); // If an error occurs, return the view with the current model to show validation errors.
-            }
-
-        }
 
         // Action to display the edit form (responds to GET requests)
         [HttpGet] // Optional, as GET is default
@@ -189,6 +152,51 @@ namespace HotelManagement.Web.Controllers
         }
 
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, CustomerViewModel model)
+        {
+            if (id != model.CustomerID)
+            {
+                return BadRequest("Customer ID mismatch.");
+            }
+
+            if (model == null)
+            {
+                return BadRequest("Customer data is null.");
+            }
+
+         
+            if (ModelState.IsValid) 
+            {
+                try
+                {
+                    var customer = new Customer(
+                       customerID: model.CustomerID,
+                       firstname: model.Firstname,
+                       lastname: model.Lastname,
+                       email: model.Email,
+                       phoneNumber: model.PhoneNumber,
+                       address: model.Address,
+                       nationality: model.Nationality,
+                       iDNumber: model.IDNumber
+                    );
+
+                    await _customerService.UpdateCustomerAsync(customer);
+                    return RedirectToAction(nameof(Index)); // إعادة التوجيه بعد الحفظ الناجح
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "An unexpected error occurred while saving your changes. Please try again.");
+                    return View(model); // العودة إلى View مع رسائل الخطأ في حال حدوث استثناء
+                }
+            }
+            // إذا لم يكن ModelState.IsValid، أعد عرض النموذج مع رسائل الخطأ
+            return View(model);
+        }
+
+
+
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -217,8 +225,6 @@ namespace HotelManagement.Web.Controllers
             return View(customerViewModel);
 
         }
-
-
 
         [HttpPost, ActionName("Delete")] // ActionName("Delete") to resolve ambiguity if both methods are named "Delete"
         [ValidateAntiForgeryToken]
@@ -251,11 +257,7 @@ namespace HotelManagement.Web.Controllers
         }
 
 
-        [HttpGet] //شرح ولماذا ؟؟؟
-        public IActionResult Create()
-        {
-            return View(); // This returns the Create.cshtml view with an empty CustomerViewModel
-        }
+     
 
     }
 }

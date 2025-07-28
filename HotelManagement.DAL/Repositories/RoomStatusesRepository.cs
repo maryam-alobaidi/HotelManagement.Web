@@ -1,11 +1,8 @@
 ﻿using HotelManagement.Domain.Entities;
 using HotelManagement.Infrastructure.DAL.Interfaces;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Data;
 
 namespace HotelManagement.Infrastructure.DAL.Repositories
 {
@@ -41,6 +38,32 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 command.CommandType = System.Data.CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@RoomStatusID", id);
               return  await PrimaryFunctions.DeleteAsync(command, _connectionString);
+            }
+        }
+
+        public async Task<IEnumerable<SelectListItem>> GetAllAsSelectListAsync()
+        {
+       
+            using (SqlCommand command = new SqlCommand("Sp_GetAllRoomStatuses"))
+            {
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                using (SqlDataReader reader = await PrimaryFunctions.GetAsync(command, _connectionString))
+                {
+                    List<SelectListItem> selectListItems = new List<SelectListItem>();
+
+                    while (await reader.ReadAsync())
+                    {
+                        var roomStatus = MapToRoomStatuse(reader);
+
+                        selectListItems.Add(new SelectListItem
+                        {
+                            Value = roomStatus.RoomStatusID.ToString(),
+                            Text = roomStatus.StatusName ?? string.Empty
+                        });
+                    }
+                    return selectListItems.OrderBy(item => item.Text).ToList();
+                }
+          
             }
         }
         public async Task<IEnumerable<RoomStatus>> GetAllAsync()
@@ -135,6 +158,28 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                  description: reader.IsDBNull(reader.GetOrdinal(nameof(RoomStatus.Description))) ? null : reader.GetString(reader.GetOrdinal(nameof(RoomStatus.Description)))
                 
            );
+        }
+
+
+        public async Task<IEnumerable<RoomStatus>> GetAllRoomStatusesAsync()
+        {
+            List<RoomStatus> roomStatuses = new List<RoomStatus>();
+
+            // استخدام الإجراء المخزن Sp_GetAllRoomStatuses
+            using (SqlCommand command = new SqlCommand("Sp_GetAllRoomStatuses"))
+            {
+                command.CommandType = CommandType.StoredProcedure; // مهم: تحديد نوع الأمر كإجراء مخزن
+
+              
+                using (SqlDataReader reader = await PrimaryFunctions.GetAsync(command, _connectionString))
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        roomStatuses.Add(MapToRoomStatuse(reader));
+                    }
+                }
+            }
+            return roomStatuses;
         }
     }
 }

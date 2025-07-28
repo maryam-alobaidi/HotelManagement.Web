@@ -8,8 +8,8 @@ namespace HotelManagement.Domain.Entities
 {
     public class RoomType
     {
-        public int RoomTypeID { get;private set; }
-        public string TypeName { get; private set; }
+        public int RoomTypeID { get; set; }
+        public string TypeName { get;  set; }
         public string? Description { get; private set; }
         public decimal BasePrice { get; private set; }
         public int? MaxOccupancy { get; private set; }

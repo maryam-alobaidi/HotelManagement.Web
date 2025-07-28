@@ -1,4 +1,5 @@
 ﻿using HotelManagement.Domain.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 namespace HotelManagement.BLL.Interfaces
@@ -10,5 +11,7 @@ namespace HotelManagement.BLL.Interfaces
         Task<bool> DeleteRoomTypeAsync(int roomTypeID);
         Task<RoomType?> GetRoomTypeByIdAsync(int roomTypeID);
         Task<IEnumerable<RoomType>> GetAllRoomTypesAsync();
+
+        Task<IEnumerable<SelectListItem>> GetAllRoomTypesAsSelectListAsync();
     }
 }

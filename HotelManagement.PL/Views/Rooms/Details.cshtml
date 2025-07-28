@@ -1,0 +1,59 @@
+﻿@model HotelManagement.Web.Models.ViewModels.RoomModel.RoomViewModel
+
+@{
+    ViewData["Title"] = "Room Details";
+}
+
+<h1>Room Details</h1>
+
+<div>
+    <h4>Room</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.RoomID)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.RoomID)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.RoomNumber)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.RoomNumber)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.BedCount)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.BedCount)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.RoomTypeName)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.RoomTypeName)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.PricePerNight)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.PricePerNight)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.RoomStatusName)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.RoomStatusName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.RoomID" class="btn btn-info">Edit</a> |
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

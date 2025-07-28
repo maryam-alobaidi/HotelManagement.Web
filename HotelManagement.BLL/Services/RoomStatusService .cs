@@ -1,6 +1,7 @@
 ﻿using HotelManagement.BLL.Interfaces;
 using HotelManagement.Domain.Entities;
 using HotelManagement.Infrastructure.DAL.Interfaces;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 
@@ -56,6 +57,11 @@ namespace HotelManagement.BLL.Services
         public async Task<IEnumerable<RoomStatus>> GetAllRoomsStatusesAsync()
         {
             return await _roomStatusesRepository.GetAllAsync();
+        }
+
+        public async Task<IEnumerable<SelectListItem>> GetAllRoomStatusesAsSelectListAsync()
+        {
+           return await _roomStatusesRepository.GetAllAsSelectListAsync();
         }
 
         public async Task<RoomStatus?> GetRoomStatusByIdAsync(int id)

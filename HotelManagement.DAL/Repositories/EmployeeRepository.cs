@@ -1,12 +1,10 @@
-﻿using HotelManagement.Domain.Entities;
+﻿using HotelManagement.DAL.Repositories;
+using HotelManagement.Domain.Entities;
 using HotelManagement.Infrastructure.DAL.Interfaces;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace HotelManagement.Infrastructure.DAL.Repositories
 {
@@ -14,11 +12,13 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
     {
 
         private readonly string _connectionString;
-        public EmployeeRepository(string connectionString)
+        private readonly ILogger<EmployeeRepository> _logger;
+        public EmployeeRepository(string connectionString,    ILogger<EmployeeRepository> logger)
         {
             if (string.IsNullOrWhiteSpace(connectionString)) throw new ArgumentException("Connection string cannot be null or empty.", nameof(connectionString));
 
             _connectionString = connectionString;
+            _logger = logger;
 
         }
 
@@ -32,7 +32,6 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 command.Parameters.AddWithValue("@LastName", employee.LastName);
                 command.Parameters.AddWithValue("@Username", employee.Username);
                 command.Parameters.AddWithValue("@PasswordHash", employee.PasswordHash);
-                command.Parameters.AddWithValue("@Salt", employee.Salt);
                 command.Parameters.AddWithValue("@Role", employee.Role);
                 command.Parameters.AddWithValue("@HireDate", employee.HireDate);
                 // Assuming EmployeeID is an output parameter
@@ -102,7 +101,6 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 command.Parameters.AddWithValue("@LastName", employee.LastName);
                 command.Parameters.AddWithValue("@Username", employee.Username);
                 command.Parameters.AddWithValue("@PasswordHash", employee.PasswordHash);
-                command.Parameters.AddWithValue("@Salt", employee.Salt);
                 command.Parameters.AddWithValue("@Role", employee.Role);
                 command.Parameters.AddWithValue("@HireDate", employee.HireDate);
 
@@ -135,9 +133,8 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 employeeID: reader.GetInt32(reader.GetOrdinal(nameof(Employee.EmployeeID))),
                 firstName: reader.GetString(reader.GetOrdinal(nameof(Employee.FirstName))),
                 lastName: reader.GetString(reader.GetOrdinal(nameof(Employee.LastName))),
-                username: reader.GetString(reader.GetOrdinal(nameof(Employee.LastName))),
+                username: reader.GetString(reader.GetOrdinal(nameof(Employee.Username))),
                 passwordHash: reader.GetString(reader.GetOrdinal(nameof(Employee.PasswordHash))),
-                salt: (byte[])reader[nameof(Employee.Salt)],
                 role: reader.GetString(reader.GetOrdinal(nameof(Employee.Role))),
                 hireDate: reader.GetDateTime(reader.GetOrdinal(nameof(Employee.HireDate)))
             );

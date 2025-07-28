@@ -1,8 +1,121 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Welcome to Our Luxury Hotel"; // Page title for the browser tab
 }
 
-<div style="background-color :darkgrey" class="text-center">
-    <h1 class="display-4">Welcome Maryam habibi</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<style>
+    /* Custom styles for this page */
+    .hero-section {
+        background: url('/images/hotel-hero-background.jpg') no-repeat center center; /* Replace with your actual image path */
+        background-size: cover;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Text shadow for better readability */
+        padding: 100px 0;
+        min-height: 600px; /* Minimum height for the hero section */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        position: relative;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4); /* Transparent overlay to make text readable */
+        z-index: 1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .card-custom {
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .card-custom:hover {
+            transform: translateY(-5px);
+        }
+
+    .icon-large {
+        font-size: 3rem;
+        color: #007bff; /* Icon color */
+        margin-bottom: 15px;
+    }
+</style>
+
+<section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1 class="display-3 fw-bold mb-4">Welcome to Our Luxury Hotel</h1>
+        <p class="lead mb-5">Enjoy an unforgettable stay in the heart of the city, where luxury meets comfort.</p>
+        <a asp-controller="Rooms" asp-action="Index" class="btn btn-primary btn-lg me-3">
+            <i class="fas fa-bed"></i> Book Your Room Now
+        </a>
+        <a asp-controller="Contact" asp-action="Index" class="btn btn-outline-light btn-lg">
+            <i class="fas fa-phone-alt"></i> Contact Us
+        </a>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="section-title">About Our Hotel</h2>
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <img src="/images/hotel-lobby.jpg" class="img-fluid rounded shadow-sm mb-3" alt="Hotel Lobby">
+            </div>
+            <div class="col-md-6">
+                <p class="lead">
+                    Our hotel is ideally located, offering an unparalleled luxury accommodation experience. With our elegant rooms, modern facilities, and exceptional service, we guarantee you a comfortable and enjoyable stay.
+                </p>
+                <p>
+                    We are committed to providing the highest standards of hospitality, with a well-trained staff ready to meet all your needs around the clock.
+                </p>
+                <a asp-controller="About" asp-action="Index" class="btn btn-info">Learn More</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <h2 class="section-title">Our Distinctive Services</h2>
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="card card-custom h-100 p-4">
+                    <div class="card-body">
+                        <i class="fas fa-wifi icon-large mb-3"></i>
+                        <h5 class="card-title">High-Speed Internet</h5>
+                        <p class="card-text">Stay connected with complimentary Wi-Fi throughout the hotel.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card card-custom h-100 p-4">
+                    <div class="card-body">
+                        <i class="fas fa-utensils icon-large mb-3"></i>
+                        <h5 class="card-title">Luxury Restaurants</h5>
+                        <p class="card-text">Enjoy a unique dining experience in our restaurants offering the most delicious dishes.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card card-custom h-100 p-4">
+                    <div class="card-body">
+                        <i class="fas fa-swimming-pool icon-large mb-3"></i>
+                        <h5 class=" card-

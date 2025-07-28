@@ -1,0 +1,75 @@
+﻿@model HotelManagement.Web.Models.ViewModels.Employee.EmployeeViewModel
+
+@{
+    ViewData["Title"] = "Employee Details";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Employee Details</h1>
+
+    <div>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.EmployeeID)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.EmployeeID)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.FirstName)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.FirstName)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.LastName)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.LastName)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Username)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Username)
+            </dd>
+
+            @* PasswordHash and Salt are sensitive and should NOT be displayed here. *@
+            @* If you had a separate "security" section, you might show if password was set, but never the hash/salt. *@
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Role)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Role)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.HireDate)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.HireDate)
+            </dd>
+        </dl>
+    </div>
+
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model.EmployeeID" class="btn btn-primary me-2">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- No specific scripts usually needed for a simple details page -->
+}
+
+<!-- Remember to include Font Awesome CSS in your _Layout.cshtml if you want icons -->
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" /> -->

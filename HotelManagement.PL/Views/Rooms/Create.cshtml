@@ -1,0 +1,69 @@
+﻿@model HotelManagement.Web.Models.ViewModels.RoomModel.RoomCreateViewModel
+
+@{
+    ViewData["Title"] = "Create New Room";
+}
+
+<h1>Create New Room</h1>
+
+<h4>Room Details</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            @* This is crucial for [ValidateAntiForgeryToken] *@
+            @Html.AntiForgeryToken()
+
+            @* Displays any non-property specific validation errors *@
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="RoomNumber" class="form-label"></label>
+                <input asp-for="RoomNumber" class="form-control" />
+                <span asp-validation-for="RoomNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="BedCount" class="form-label"></label>
+                <input asp-for="BedCount" class="form-control" />
+                <span asp-validation-for="BedCount" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="RoomTypeID" class="form-label"></label>
+                @* asp-items is used to populate the dropdown with data from Model.RoomTypes *@
+                <select asp-for="RoomTypeID" asp-items="Model.RoomTypes" class="form-select">
+                    <option value="">-- Select Room Type --</option> @* Optional: default unselected option *@
+                </select>
+                <span asp-validation-for="RoomTypeID" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="PricePerNight" class="form-label"></label>
+                <input asp-for="PricePerNight" class="form-control" />
+                <span asp-validation-for="PricePerNight" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="RoomStatusID" class="form-label"></label>
+                @* asp-items is used to populate the dropdown with data from Model.RoomStatuses *@
+                <select asp-for="RoomStatusID" asp-items="Model.RoomStatuses" class="form-select">
+                    <option value="">-- Select Room Status --</option> @* Optional: default unselected option *@
+                </select>
+                <span asp-validation-for="RoomStatusID" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <button type="submit" class="btn btn-primary">Create Room</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        // This partial view includes scripts for client-side validation
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

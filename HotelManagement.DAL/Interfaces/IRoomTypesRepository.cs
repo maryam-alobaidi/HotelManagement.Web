@@ -1,9 +1,5 @@
 ﻿using HotelManagement.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HotelManagement.Infrastructure.DAL.Interfaces
 {
@@ -15,6 +11,7 @@ namespace HotelManagement.Infrastructure.DAL.Interfaces
         Task<bool> UpdateAsync(RoomType roomType);
         Task<IEnumerable<RoomType>> GetAllAsync();
         Task<RoomType?> GetByIdAsync(int roomTypeID);
-
+        Task<IEnumerable<SelectListItem>> GetAllRoomTypesAsSelectListAsync();
+        Task<IEnumerable<RoomType>> GetAllRoomTypesAsync();
     }
 }

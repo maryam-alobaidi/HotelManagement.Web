@@ -4,7 +4,9 @@ using HotelManagement.DAL.Interfaces;
 using HotelManagement.DAL.Repositories;
 using HotelManagement.Infrastructure.DAL.Interfaces;
 using HotelManagement.Infrastructure.DAL.Repositories;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 
 namespace HotelManagement.Web
 {
@@ -29,13 +31,13 @@ namespace HotelManagement.Web
 
             builder.Services.AddScoped<ICustomerRepository>(provider => new CustomerRepository(connectionString,provider.GetRequiredService<ILogger<CustomerRepository>>()));
 
+            builder.Services.AddScoped<IEmployeeRepository>(provider => new EmployeeRepository(connectionString, provider.GetRequiredService<ILogger<EmployeeRepository>>()));
+
             builder.Services.AddScoped<IRoomRepository>(providor => new RoomRepository(connectionString));
 
             builder.Services.AddScoped<IRoomTypesRepository>(providor => new RoomTypesRepository(connectionString));
 
             builder.Services.AddScoped<IRoomStatusesRepository>(providor => new RoomStatusesRepository(connectionString));
-
-            builder.Services.AddScoped<IEmployeeRepository>(provider => new EmployeeRepository(connectionString));
 
             builder.Services.AddScoped<IBookingRepository>(provider => new BookingRepository(connectionString));
 
@@ -47,6 +49,7 @@ namespace HotelManagement.Web
 
             builder.Services.AddScoped<IPaymentsRepository>(provider => new PaymentsRepository(connectionString));
 
+            builder.Services.AddScoped<IPasswordHasherService, PasswordHasherService>();
 
 
             // AddAsync services to the container.
@@ -79,6 +82,8 @@ namespace HotelManagement.Web
 
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
+            builder.Services.AddScoped<IPasswordHasherService, PasswordHasherService>();
+
             builder.Services.AddScoped<IBookingService, BookingService>();
 
             builder.Services.AddScoped<IInvoiceItemService, InvoiceItemService>();
@@ -89,7 +94,28 @@ namespace HotelManagement.Web
 
             builder.Services.AddScoped<IPaymentService, PaymentService>();
 
+            //for the Localization culture settings
 
+            builder.Services.AddControllersWithViews(); // تأكدي أن هذه موجودة
+
+            // *** الحل هنا: إعدادات الثقافة ***
+            builder.Services.Configure<RequestLocalizationOptions>(options =>
+            {
+                // تحديد الثقافة الافتراضية والثقافات المدعومة. en-US تستخدم النقطة.
+                var defaultCulture = new CultureInfo("en-US");
+                var supportedCultures = new[] { defaultCulture };
+
+                options.DefaultRequestCulture = new RequestCulture(defaultCulture);
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+
+                // مسح مزودي الثقافة الآخرين لضمان فرض الثقافة المحددة
+                // هذا السطر مهم جداً لضمان عدم تداخل أي إعدادات أخرى (مثل إعدادات المتصفح).
+                options.RequestCultureProviders.Clear();
+                // يمكنكِ إضافة مزود واحد فقط إذا أردتِ السماح برؤوس Accept-Language من المتصفح، لكن مع فرض الأرقام
+                // options.RequestCultureProviders.Insert(0, new AcceptLanguageHeaderRequestCultureProvider()); 
+                // أو لا تضيفي أي شيء بعد Clear() لفرض الثقافة التي حددتيها بقوة.
+            });
 
 
             builder.Services.AddAuthorization();
@@ -113,8 +139,8 @@ namespace HotelManagement.Web
 
             app.UseStaticFiles();// ملفات ثابته Middleware 
 
-            app.UseRouting();// ملفات يستخدم لتحديد الـ Controller والـ Action المناسبين للطلب بناءً على الـ URL ..Middleware 
-
+            //  app.UseRouting();// ملفات يستخدم لتحديد الـ Controller والـ Action المناسبين للطلب بناءً على الـ URL ..Middleware 
+            app.UseRequestLocalization();// يستخدم لتحديد الثقافة (Culture) المستخدمة في التطبيق بناءً على إعدادات المستخدم أو الطلب. هذا مهم جدًا للتطبيقات التي تحتاج إلى دعم لغات متعددة أو تنسيقات أرقام وتواريخ مختلفة.
             app.UseAuthorization();// يستخدم للتحقق من هوية المستخدم (هل المستخدم الذي يرسل الطلب هو من يدعي أنه هو؟). Middleware 
 
 

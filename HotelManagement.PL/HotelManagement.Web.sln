@@ -5,7 +5,7 @@ VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManagement.Web", "HotelManagement.Web.csproj", "{82B3B617-681D-470C-962E-150D58067F9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManagement.DBL", "..\HotelManagement.BLL\HotelManagement.DBL.csproj", "{01C278F5-35F1-C07D-F9BE-3D7FA3362CA1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManagement.BLL", "..\HotelManagement.BLL\HotelManagement.BLL.csproj", "{01C278F5-35F1-C07D-F9BE-3D7FA3362CA1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManagement.Infrastructure.DAL", "..\HotelManagement.DAL\HotelManagement.Infrastructure.DAL.csproj", "{0CC5CC63-3F4F-E549-C357-A91F06A29724}"
 EndProject

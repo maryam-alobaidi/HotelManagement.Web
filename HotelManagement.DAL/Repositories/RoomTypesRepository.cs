@@ -2,6 +2,7 @@
 using HotelManagement.Infrastructure.DAL.Interfaces;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 namespace HotelManagement.Infrastructure.DAL.Repositories
@@ -134,12 +135,60 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 typeName: reader.GetString(reader.GetOrdinal(nameof(RoomType.TypeName))),
                 description: reader.IsDBNull(reader.GetOrdinal(nameof(RoomType.Description))) ? null : reader.GetString(reader.GetOrdinal(nameof(RoomType.Description))),
                 basePrice: reader.GetDecimal(reader.GetOrdinal(nameof(RoomType.BasePrice))),
-                maxOccupancy: reader.IsDBNull(reader.GetOrdinal(nameof(RoomType.Description))) ? null : (int?)reader.GetInt32(reader.GetOrdinal(nameof(RoomType.MaxOccupancy))),
+                 maxOccupancy: reader.IsDBNull(reader.GetOrdinal(nameof(RoomType.MaxOccupancy))) ? null : (int?)reader.GetInt32(reader.GetOrdinal(nameof(RoomType.MaxOccupancy))),
                 amenities: reader.IsDBNull(reader.GetOrdinal(nameof(RoomType.Amenities))) ? null : reader.GetString(reader.GetOrdinal(nameof(RoomType.Amenities)))
                 );
             
         }
 
+        //use SelectListItem for return value and textfor drop down list in view html
+        public async Task<IEnumerable<SelectListItem>> GetAllRoomTypesAsSelectListAsync()
+        {
+            using (SqlCommand command = new SqlCommand("Sp_GetAllRoomTypes"))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                using (SqlDataReader reader = await PrimaryFunctions.GetAsync(command, _connectionString))
+                {
+                    List<SelectListItem> roomTypeSelectList = new List<SelectListItem>();
+
+                    while (await reader.ReadAsync()) 
+                    {
+                        var roomType = MapToRoomType(reader);
+
+                        roomTypeSelectList.Add(new SelectListItem()
+                        {
+                            Value = roomType.RoomTypeID.ToString(),
+                            Text = roomType.TypeName
+                        }
+                       );
+                    }
+                        return roomTypeSelectList.OrderBy(rt => rt.Text).ToList();
+                }
+            }
+        }
+
+
+        public async Task<IEnumerable<RoomType>> GetAllRoomTypesAsync()
+        {
+            List<RoomType> roomTypes = new List<RoomType>();
+
+            // Use your new stored procedure here
+            using (SqlCommand command = new SqlCommand("Sp_GetAllRoomTypes"))
+            {
+                command.CommandType = CommandType.StoredProcedure; // IMPORTANT: Set CommandType to StoredProcedure
+
+                using (SqlDataReader reader = await PrimaryFunctions.GetAsync(command, _connectionString))
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        roomTypes.Add(MapToRoomType(reader));
+                    }
+                }
+            }
+            return roomTypes;
+        }
+
 
     }
+
 }

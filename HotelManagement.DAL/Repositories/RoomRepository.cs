@@ -2,6 +2,7 @@
 using HotelManagement.Domain.Entities;
 using Microsoft.Data.SqlClient;
 using HotelManagement.Infrastructure.DAL.Repositories;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HotelManagement.Infrastructure.DAL.Repositories
 {
@@ -108,7 +109,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                     }
                     else
                     {
-                        return null; // No room found with the given ID
+                        return null; 
                     }
 
                 }
@@ -116,15 +117,23 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
         }
         private Room MapToRoom(SqlDataReader reader)
         {
-            return new Room
-           (
-                 roomID: reader.GetInt32(reader.GetOrdinal(nameof(Room.RoomID))), // Use nameof for safety  
-                 roomNumber: reader.IsDBNull(reader.GetOrdinal(nameof(Room.RoomNumber))) ? null : reader.GetString(reader.GetOrdinal(nameof(Room.RoomNumber))),
-                 bedCount: reader.IsDBNull(reader.GetOrdinal(nameof(Room.BedCount))) ? null : reader.GetInt32(reader.GetOrdinal(nameof(Room.BedCount))),
-                 roomTypeID: reader.IsDBNull(reader.GetOrdinal(nameof(Room.RoomTypeID))) ? null : reader.GetInt32(reader.GetOrdinal(nameof(Room.RoomTypeID))),
-                 pricePerNight: reader.IsDBNull(reader.GetOrdinal(nameof(Room.PricePerNight))) ? null : reader.GetDecimal(reader.GetOrdinal(nameof(Room.PricePerNight))),
-                 roomStatusID: reader.IsDBNull(reader.GetOrdinal(nameof(Room.RoomStatusID))) ? null : reader.GetInt32(reader.GetOrdinal(nameof(Room.RoomStatusID)))
-           );
+            // First, create the Room object using your existing constructor
+            var room = new Room(
+                roomID: reader.GetInt32(reader.GetOrdinal(nameof(Room.RoomID))),
+                roomNumber: reader.GetString(reader.GetOrdinal(nameof(Room.RoomNumber))),
+                bedCount: reader.GetInt32(reader.GetOrdinal(nameof(Room.BedCount))),
+                roomTypeID: reader.GetInt32(reader.GetOrdinal(nameof(Room.RoomTypeID))),
+                pricePerNight: reader.IsDBNull(reader.GetOrdinal(nameof(Room.PricePerNight))) ? null : reader.GetDecimal(reader.GetOrdinal(nameof(Room.PricePerNight))),
+                roomStatusID: reader.GetInt32(reader.GetOrdinal(nameof(Room.RoomStatusID)))
+            );
+
+            // Now, populate the navigation properties with the data from the JOINs
+            // Ensure RoomType and RoomStatus are not null before accessing (if they were not initialized in the constructor)
+            // Since you initialize them in your constructor, they won't be null here.
+            room.RoomType.TypeName = reader.GetString(reader.GetOrdinal("TypeName"));
+            room.RoomStatus.StatusName = reader.GetString(reader.GetOrdinal("StatusName"));
+
+            return room;
         }
         public async Task<Room?> GetRoomByRoomNumberAsync(string RoomNumber)
         {
@@ -152,7 +161,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
 
 
 
-
+     
 
     }
 }
