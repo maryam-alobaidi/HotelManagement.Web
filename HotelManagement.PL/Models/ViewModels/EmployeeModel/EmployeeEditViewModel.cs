@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HotelManagement.Web.Models.ViewModels.Employee
+namespace HotelManagement.Web.Models.ViewModels.EmployeeModel
 {
     public class EmployeeEditViewModel
     {
 
-        public int EmployeeID { get; set; } // Needed to identify which employee is being edited
+        public int EmployeeID { get; set; } // Needed to identify which Employee is being edited
 
         [Required(ErrorMessage = "First Name is required.")]
         [StringLength(50, ErrorMessage = "First name cannot exceed 50 characters.")]

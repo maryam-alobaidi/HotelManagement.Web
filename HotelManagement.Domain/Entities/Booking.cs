@@ -18,7 +18,7 @@ namespace HotelManagement.Domain.Entities
         public  BookingStatusEnum BookingStatus { get; set; }// حالة الحجز (معلقة، مؤكدة، ملغاة، مكتملة) تعديل في الدتا بيس ؟
 
         public int? BookedByEmployeeID { get; set; }
-        public Employee employee { get; set; }
+        public Employee Employee { get; set; }
         public Room Room { get; set; } // خاصية Navigation لكيان الغرفة
         public Customer Customer { get; set; } // خاصية Navigation لكيان العميل
 
@@ -34,8 +34,12 @@ namespace HotelManagement.Domain.Entities
                 // هذا الشرط يعني: إذا كان هناك قيمة و كانت هذه القيمة أقل أو تساوي صفر
                 throw new ArgumentException("Employee ID must be positive if provided.", nameof(bookedByEmployeeID));
             }
-            if (checkInDate.Date >= checkOutDate.Date) throw new ArgumentException("Check-out date must be after check-in date.", nameof(checkOutDate)); // Use .Date to compare only dates
-            if (numAdults <= 0 && numChildren <= 0) throw new ArgumentException("At least one adult or child is required for the booking.", nameof(numAdults));
+            if (checkInDate >= checkOutDate)
+            {
+                throw new ArgumentException("Check-out date and time must be after check-in date and time.", nameof(checkOutDate));
+            }
+
+            if (numAdults <= 0) throw new ArgumentException("At least one adult is required for the booking.", nameof(numAdults));
 
             // Assign properties (use .Date for dates if time component is irrelevant for logic)
             RoomID = roomID;

@@ -72,7 +72,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
             }
             using (SqlCommand command = new SqlCommand("Sp_GetBookingByID"))
             {
-                command.Parameters.AddWithValue("@ID", id);
+                command.Parameters.AddWithValue("@BookingID", id);
                 command.CommandType = CommandType.StoredProcedure;
                 using (SqlDataReader reader = await PrimaryFunctions.GetAsync(command, _connectionString))
                 {
@@ -129,20 +129,74 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
 
         private Booking MapToBooking(SqlDataReader reader)
         {
-            return new Booking
+            // Ensure all GetOrdinal calls are optimized by storing ordinals
+            // Example: int roomNumberOrdinal = reader.GetOrdinal(nameof(Booking.Room.RoomNumber));
+
+            //read all the data of room
+            var room = new Room
             (
-                bookingID : reader.GetInt32(reader.GetOrdinal(nameof(Booking.BookingID))),
-                roomID : reader.GetInt32(reader.GetOrdinal(nameof(Booking.RoomID))),
-                customerID : reader.GetInt32(reader.GetOrdinal(nameof(Booking.CustomerID))),
-                checkInDate : reader.GetDateTime(reader.GetOrdinal(nameof(Booking.CheckInDate))),
+                roomID: reader.GetInt32(reader.GetOrdinal(nameof(Booking.RoomID))),
+                roomNumber: reader.GetString(reader.GetOrdinal(nameof(Booking.Room.RoomNumber))), // 'RoomNumber' is likely direct column name
+                bedCount: reader.GetInt32(reader.GetOrdinal(nameof(Booking.Room.BedCount))),      // 'BedCount' is likely direct column name
+                roomTypeID: reader.GetInt32(reader.GetOrdinal(nameof(Booking.Room.RoomTypeID))),  // 'RoomTypeID' is likely direct column name
+                pricePerNight: reader.IsDBNull(reader.GetOrdinal(nameof(Booking.Room.PricePerNight))) ? null : reader.GetDecimal(reader.GetOrdinal(nameof(Booking.Room.PricePerNight))),
+                roomStatusID: reader.GetInt32(reader.GetOrdinal(nameof(Booking.Room.RoomStatusID)))
+            );
+
+            //read all the data of customer
+            var customer = new Customer
+            (
+                customerID: reader.GetInt32(reader.GetOrdinal(nameof(Booking.CustomerID))), // This is from Booking.CustomerID, not Customer.CustomerID
+                                                                                            // CORRECTED: Use alias 'CustomerFirstName'
+                firstname: reader.GetString(reader.GetOrdinal("CustomerFirstName")),
+                // CORRECTED: Use alias 'CustomerLastName'
+                lastname: reader.GetString(reader.GetOrdinal("CustomerLastName")),
+                email: reader.GetString(reader.GetOrdinal(nameof(Booking.Customer.Email))),
+                phoneNumber: reader.GetString(reader.GetOrdinal(nameof(Booking.Customer.PhoneNumber))),
+                address: reader.IsDBNull(reader.GetOrdinal(nameof(Booking.Customer.Address))) ? null : reader.GetString(reader.GetOrdinal(nameof(Booking.Customer.Address))),
+                nationality: reader.GetString(reader.GetOrdinal(nameof(Booking.Customer.Nationality))),
+                iDNumber: reader.GetString(reader.GetOrdinal(nameof(Booking.Customer.IDNumber)))
+            );
+
+            Employee? employee = null;
+            // CORRECTED: Use alias 'EmployeeFirstName'
+            int employeeFirstNameOrdinal = reader.GetOrdinal("EmployeeFirstName");
+            if (!reader.IsDBNull(employeeFirstNameOrdinal))
+            {
+                employee = new Employee(
+                    employeeID: reader.GetInt32(reader.GetOrdinal(nameof(Booking.BookedByEmployeeID))), // EmployeeID should map from BookedByEmployeeID
+                                                                                                        // CORRECTED: Use alias 'EmployeeFirstName'
+                    firstName: reader.GetString(reader.GetOrdinal("EmployeeFirstName")),
+                    // CORRECTED: Use alias 'EmployeeLastName'
+                    lastName: reader.GetString(reader.GetOrdinal("EmployeeLastName")),
+                    username: reader.GetString(reader.GetOrdinal(nameof(Booking.Employee.Username))),
+                    passwordHash: reader.GetString(reader.GetOrdinal(nameof(Booking.Employee.PasswordHash))),
+                    role: reader.GetString(reader.GetOrdinal(nameof(Booking.Employee.Role))),
+                    hireDate: reader.GetDateTime(reader.GetOrdinal(nameof(Booking.Employee.HireDate)))
+                );
+            }
+
+            // Creating Booking object (this part seems fine if you adjusted to use ordinals as suggested previously)
+            var booking = new Booking
+            (
+                bookingID: reader.GetInt32(reader.GetOrdinal(nameof(Booking.BookingID))),
+                roomID: reader.GetInt32(reader.GetOrdinal(nameof(Booking.RoomID))),
+                customerID: reader.GetInt32(reader.GetOrdinal(nameof(Booking.CustomerID))),
+                checkInDate: reader.GetDateTime(reader.GetOrdinal(nameof(Booking.CheckInDate))),
                 checkOutDate: reader.GetDateTime(reader.GetOrdinal(nameof(Booking.CheckOutDate))),
                 bookingDate: reader.GetDateTime(reader.GetOrdinal(nameof(Booking.BookingDate))),
                 numAdults: reader.GetInt32(reader.GetOrdinal(nameof(Booking.NumAdults))),
-                numChildren: reader.GetInt32(reader.GetOrdinal(nameof(Booking.NumChildren))),
+                numChildren: reader.IsDBNull(reader.GetOrdinal(nameof(Booking.NumChildren))) ? (int?)null : reader.GetInt32(reader.GetOrdinal(nameof(Booking.NumChildren))),
                 totalPrice: reader.GetDecimal(reader.GetOrdinal(nameof(Booking.TotalPrice))),
                 bookingStatus: (BookingStatusEnum)reader.GetInt32(reader.GetOrdinal(nameof(Booking.BookingStatus))),
-                bookedByEmployeeID: reader.GetInt32(reader.GetOrdinal(nameof(Booking.BookedByEmployeeID)))
+                bookedByEmployeeID: reader.IsDBNull(reader.GetOrdinal(nameof(Booking.BookedByEmployeeID))) ? (int?)null : reader.GetInt32(reader.GetOrdinal(nameof(Booking.BookedByEmployeeID)))
             );
+
+            booking.Room = room;
+            booking.Customer = customer;
+            booking.Employee = employee;
+
+            return booking;
         }
 
         public async Task<bool> IsRoomAvailable(int roomID, DateTime checkInDate, DateTime checkOutDate, int? bookingIdToExclude = null)

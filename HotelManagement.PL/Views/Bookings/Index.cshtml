@@ -1,5 +1,125 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<HotelManagement.Web.Models.ViewModels.BookingModel.BookingViewModel>
+
 @{
+    ViewData["Title"] = "Booking List";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Booking List</h1>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-circle"></i> Create New Booking
+        </a>
+    </p>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info" role="alert">
+            No bookings available.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.BookingID)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Room.RoomNumber) @* Display Room Number *@
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Customer.FullName) @* Display Customer Full Name *@
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CheckInDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CheckOutDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.BookingDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.NumAdults)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.NumChildren)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TotalPrice)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.BookingStatus)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Employee.FirstName) @* Display Employee Name *@
+                        </th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.BookingID)
+                            </td>
+                            <td>
+                                @* Access Room Number from the navigation property *@
+                                @Html.DisplayFor(modelItem => item.Room.RoomNumber)
+                            </td>
+                            <td>
+                                @* Access Customer Full Name from the navigation property *@
+                                @Html.DisplayFor(modelItem => item.Customer.FullName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CheckInDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CheckOutDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.BookingDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumAdults)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumChildren)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalPrice)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.BookingStatus)
+                            </td>
+                            <td>
+                                @* Access Employee First Name from the navigation property *@
+                                @Html.DisplayFor(modelItem => item.Employee.FirstName)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.BookingID" class="btn btn-sm btn-info" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a> |
+                                <a asp-action="Details" asp-route-id="@item.BookingID" class="btn btn-sm btn-secondary" title="Details">
+                                    <i class="fas fa-info-circle"></i>
+                                </a> |
+                                <a asp-action="Delete" asp-route-id="@item.BookingID" class="btn btn-sm btn-danger" title="Delete">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+@* No specific client-side scripts are usually needed for a simple list display *@
 }

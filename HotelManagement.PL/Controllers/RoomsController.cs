@@ -58,8 +58,8 @@ namespace HotelManagement.Web.Controllers
         {
             if (id <= 0)
             {
-                _logger.LogWarning("Details: Invalid room ID provided.");
-                return BadRequest("Invalid room ID.");
+                _logger.LogWarning("Details: Invalid Room ID provided.");
+                return BadRequest("Invalid Room ID.");
             }
 
             var room = await _roomService.GetRoomByIdAsync(id);
@@ -150,8 +150,8 @@ namespace HotelManagement.Web.Controllers
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Create: Error occurred while creating room.");
-                    ModelState.AddModelError(string.Empty, "An error occurred while creating the room. Please try again later.");
+                    _logger.LogError(ex, "Create: Error occurred while creating Room.");
+                    ModelState.AddModelError(string.Empty, "An error occurred while creating the Room. Please try again later.");
                     requiresDropdownRepopulation = true; // Mark that dropdowns are needed
                 }
             }
@@ -174,8 +174,8 @@ namespace HotelManagement.Web.Controllers
         {
             if (id <= 0)
             {
-                _logger.LogWarning("Edit: Invalid room ID provided.");
-                return BadRequest("Invalid room ID.");
+                _logger.LogWarning("Edit: Invalid Room ID provided.");
+                return BadRequest("Invalid Room ID.");
             }
 
             var room = await _roomService.GetRoomByIdAsync(id);
@@ -209,8 +209,8 @@ namespace HotelManagement.Web.Controllers
         {
             if (id <= 0)
             {
-                _logger.LogWarning("Edit: Invalid room ID provided.");
-                return BadRequest("Invalid room ID.");
+                _logger.LogWarning("Edit: Invalid Room ID provided.");
+                return BadRequest("Invalid Room ID.");
             }
 
             if (!ModelState.IsValid)
@@ -269,8 +269,8 @@ namespace HotelManagement.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Edit: Error occurred while updating room with ID {model.RoomID}.");
-                ModelState.AddModelError(string.Empty, "An error occurred while updating the room. Please try again later.");
+                _logger.LogError(ex, $"Edit: Error occurred while updating Room with ID {model.RoomID}.");
+                ModelState.AddModelError(string.Empty, "An error occurred while updating the Room. Please try again later.");
                 model.RoomTypes = await _roomService.GetAllRoomTypesAsSelectListItemsAsync();
                 model.RoomStatuses = await _roomService.GetAllRoomStatusesAsSelectListItemsAsync();
                 return View(model);
@@ -283,7 +283,7 @@ namespace HotelManagement.Web.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest("Invalid room ID.");
+                return BadRequest("Invalid Room ID.");
             }
 
             var rooms = await _roomService.GetRoomByIdAsync(id);
@@ -316,7 +316,7 @@ namespace HotelManagement.Web.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest("Invalid room ID.");
+                return BadRequest("Invalid Room ID.");
             }
 
             var rooms = await _roomService.GetRoomByIdAsync(id);
@@ -354,8 +354,8 @@ namespace HotelManagement.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"DeleteConfirmed: Error occurred while deleting room with ID {id}.");
-                ModelState.AddModelError(string.Empty, "An error occurred while deleting the room. Please try again later.");
+                _logger.LogError(ex, $"DeleteConfirmed: Error occurred while deleting Room with ID {id}.");
+                ModelState.AddModelError(string.Empty, "An error occurred while deleting the Room. Please try again later.");
                 return View(new RoomViewModel
                 {
                     RoomID = rooms.RoomID,

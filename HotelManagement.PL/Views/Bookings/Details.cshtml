@@ -1,5 +1,104 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model HotelManagement.Web.Models.ViewModels.BookingModel.BookingViewModel
+
 @{
+    ViewData["Title"] = "Booking Details";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Booking Details</h1>
+    <hr />
+
+    <div>
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.BookingID)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.BookingID)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Room.RoomNumber) @* Display Name for Room Number *@
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Room.RoomNumber) @* Access Room Number from navigation property *@
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Customer.FullName) @* Display Name for Customer Full Name *@
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Customer.FullName) @* Access Full Name from navigation property *@
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.CheckInDate)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.CheckInDate)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.CheckOutDate)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.CheckOutDate)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.BookingDate)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.BookingDate)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.NumAdults)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.NumAdults)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.NumChildren)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.NumChildren)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.TotalPrice)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.TotalPrice)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.BookingStatus)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.BookingStatus)
+            </dd>
+
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Employee.FirstName) @* Display Name for Employee First Name *@
+            </dt>
+            <dd class="col-sm-9">
+                @* Access Employee First Name from navigation property, handle null if BookedByEmployeeID is null *@
+                @(Model.Employee?.FirstName ?? "N/A")
+            </dd>
+        </dl>
+    </div>
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model?.BookingID" class="btn btn-primary">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a asp-action="Index" class="btn btn-secondary ms-2">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+@* No specific client-side scripts are usually needed for a details view *@
 }

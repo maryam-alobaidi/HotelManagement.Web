@@ -1,6 +1,6 @@
 ﻿using HotelManagement.BLL.Interfaces;
 using HotelManagement.Domain.Entities;
-using HotelManagement.Web.Models.ViewModels.Employee;
+using HotelManagement.Web.Models.ViewModels.EmployeeModel;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -59,7 +59,7 @@ namespace HotelManagement.Web.Controllers
 
             var employeeViewModel = new EmployeeViewModel
             {
-              //  EmployeeID = employee.EmployeeID,
+              //  EmployeeID = Employee.EmployeeID,
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
                 Username = employee.Username,
@@ -67,7 +67,7 @@ namespace HotelManagement.Web.Controllers
                 HireDate = employee.HireDate
             };
 
-            return View(employeeViewModel); // Return the view with the employee details.
+            return View(employeeViewModel); // Return the view with the Employee details.
         }
 
         [HttpGet]
@@ -113,8 +113,8 @@ namespace HotelManagement.Web.Controllers
             catch (Exception ex)
             {
 
-                _logger.LogError(ex, "Error creating employee. ViewModel: {@Model}", model); // {@Model} لتسجيل كائن المودل كاملاً
-                ModelState.AddModelError("", "An unexpected error occurred while adding the employee. Please try again.");
+                _logger.LogError(ex, "Error creating Employee. ViewModel: {@Model}", model); // {@Model} لتسجيل كائن المودل كاملاً
+                ModelState.AddModelError("", "An unexpected error occurred while adding the Employee. Please try again.");
                 return View(model);
             }
         }
@@ -146,14 +146,14 @@ namespace HotelManagement.Web.Controllers
                 }
                 else
                 {
-                    _logger.LogWarning("Delete: Failed to delete employee with ID {Id}.", id);
-                    return NotFound("Failed to delete employee.");
+                    _logger.LogWarning("Delete: Failed to delete Employee with ID {Id}.", id);
+                    return NotFound("Failed to delete Employee.");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting employee with ID {Id}.", id);
-                return StatusCode(500, "An error occurred while deleting the employee. Please try again later.");
+                _logger.LogError(ex, "Error deleting Employee with ID {Id}.", id);
+                return StatusCode(500, "An error occurred while deleting the Employee. Please try again later.");
             }
 
         }
@@ -186,7 +186,7 @@ namespace HotelManagement.Web.Controllers
                 HireDate = Employee.HireDate
             };
 
-            return View(employeeViewModel); // Return the view with the employee details for confirmation.
+            return View(employeeViewModel); // Return the view with the Employee details for confirmation.
         }
 
         [HttpGet]
@@ -207,7 +207,7 @@ namespace HotelManagement.Web.Controllers
 
             var employeeViewModel = new EmployeeEditViewModel
             {
-               // EmployeeID = employee.EmployeeID,
+               // EmployeeID = Employee.EmployeeID,
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
                 Username = employee.Username,
@@ -215,7 +215,7 @@ namespace HotelManagement.Web.Controllers
                 HireDate = employee.HireDate
             };
 
-            return View(employeeViewModel); // Return the view with the employee details for editing.
+            return View(employeeViewModel); // Return the view with the Employee details for editing.
 
         }
 
@@ -290,15 +290,15 @@ namespace HotelManagement.Web.Controllers
                 {
                     // إذا فشل التحديث (مثل عدم تأثر أي صف في قاعدة البيانات)، نسجل تحذيراً ونعرض رسالة خطأ عامة.
                     _logger.LogWarning("Edit (POST): Employee with ID {Id} update failed in service layer.", id);
-                    ModelState.AddModelError("", "Failed to update employee. Please check the data and try again.");
+                    ModelState.AddModelError("", "Failed to update Employee. Please check the data and try again.");
                     return View(model); // إعادة عرض النموذج مع رسالة الخطأ
                 }
             }
             catch (Exception ex)
             {
                 // معالجة أي أخطاء غير متوقعة تحدث أثناء عملية التحديث
-                _logger.LogError(ex, "Edit (POST): An unexpected error occurred while updating employee with ID: {Id}. ViewModel: {@Model}", id, model);
-                ModelState.AddModelError("", "An unexpected error occurred while updating the employee. Please try again.");
+                _logger.LogError(ex, "Edit (POST): An unexpected error occurred while updating Employee with ID: {Id}. ViewModel: {@Model}", id, model);
+                ModelState.AddModelError("", "An unexpected error occurred while updating the Employee. Please try again.");
                 return View(model); // إعادة عرض النموذج مع رسالة الخطأ العام
             }
         }

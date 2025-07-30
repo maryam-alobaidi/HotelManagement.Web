@@ -13,6 +13,8 @@ namespace HotelManagement.Domain.Entities
         public  string Nationality { get; private set; }
         public  string IDNumber { get; private set; }
 
+        public string FullName => $"{Firstname} {Lastname}"; // Property to get full name of the customer
+
         //for creare new customer
         public Customer(string firstname, string lastname, string email, string phoneNumber, string? address, string nationality, string iDNumber)
         {

@@ -93,7 +93,7 @@ namespace HotelManagement.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Create: Model state invalid for customer create. Errors: {Errors}",
+                _logger.LogWarning("Create: Model state invalid for Customer create. Errors: {Errors}",
                     string.Join("; ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
                 return View(model);
             }
@@ -111,8 +111,8 @@ namespace HotelManagement.Web.Controllers
             catch (Exception ex)
             {
               
-                _logger.LogError(ex, "Error creating customer. ViewModel: {@Model}", model); // {@Model} لتسجيل كائن المودل كاملاً
-                ModelState.AddModelError("", "An unexpected error occurred while adding the customer. Please try again.");
+                _logger.LogError(ex, "Error creating Customer. ViewModel: {@Model}", model); // {@Model} لتسجيل كائن المودل كاملاً
+                ModelState.AddModelError("", "An unexpected error occurred while adding the Customer. Please try again.");
                 return View(model);
             }
         }
@@ -125,7 +125,7 @@ namespace HotelManagement.Web.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest("Invalid customer ID.");
+                return BadRequest("Invalid Customer ID.");
             }
 
             var customer = await _customerService.GetCustomerByIdAsync(id);
@@ -202,7 +202,7 @@ namespace HotelManagement.Web.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest("Invalid customer ID.");
+                return BadRequest("Invalid Customer ID.");
             }
 
             var customer = await _customerService.GetCustomerByIdAsync(id);
@@ -232,7 +232,7 @@ namespace HotelManagement.Web.Controllers
         {
             if (id <= 0)
             {
-                return BadRequest("Invalid customer ID.");
+                return BadRequest("Invalid Customer ID.");
             }
 
             var customer = await _customerService.GetCustomerByIdAsync(id);

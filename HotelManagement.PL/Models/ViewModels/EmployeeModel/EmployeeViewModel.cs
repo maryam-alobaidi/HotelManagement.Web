@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 
-namespace HotelManagement.Web.Models.ViewModels.Employee
+namespace HotelManagement.Web.Models.ViewModels.EmployeeModel
 {
     public class EmployeeViewModel
     {

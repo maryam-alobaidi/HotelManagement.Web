@@ -59,7 +59,7 @@ namespace HotelManagement.Domain.Entities
             HireDate = hireDate;
         }
 
-        private Employee()
+        public Employee()
         {
             // Parameterless constructor for ORM or serialization purposes
         }

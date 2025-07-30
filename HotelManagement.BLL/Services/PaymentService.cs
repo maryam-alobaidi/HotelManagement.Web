@@ -36,7 +36,7 @@ namespace HotelManagement.BLL.Services
             // Check if RecordedByEmployeeID has a value and if that value is invalid
             if (payment.RecordedByEmployeeID.HasValue && payment.RecordedByEmployeeID.Value <= 0)
             {
-                throw new ArgumentException("Recorded by employee ID must be greater than zero if provided.", nameof(payment.RecordedByEmployeeID));
+                throw new ArgumentException("Recorded by Employee ID must be greater than zero if provided.", nameof(payment.RecordedByEmployeeID));
             }
 
             // Set payment date to UTC Now if not provided
