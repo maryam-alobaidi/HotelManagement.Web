@@ -9,6 +9,8 @@ namespace HotelManagement.Domain.Entities
         public string StatusName { get; set; }
         public string? Description { get; set; }
 
+
+        //For creating a new Room Status
         public RoomStatus(string statusName, string? description)
         {
 
@@ -25,6 +27,7 @@ namespace HotelManagement.Domain.Entities
             Description = description.Trim();
         }
 
+        //For retrieving data from database
         public RoomStatus(int roomStatusID, string statusName, string? description)
         {
             RoomStatusID = roomStatusID;

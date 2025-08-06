@@ -12,5 +12,7 @@ namespace HotelManagement.Infrastructure.DAL.Interfaces
         Task<bool> UpdateAsync(Room room);
         Task<Room?> GetRoomByRoomNumberAsync(string RoomNumber);
 
+        Task<IEnumerable<Room>> GetAvailableRoomsAsync(DateTime startDate, DateTime endDate);
+
     }
 }

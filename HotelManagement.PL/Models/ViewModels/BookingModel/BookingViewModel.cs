@@ -30,6 +30,7 @@ namespace HotelManagement.Web.Models.ViewModels.BookingModel
         public int? NumChildren { get; set; }
 
         [Display(Name = "Total Price")]
+        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal TotalPrice { get; set; }
 
         [Display(Name = "Booking Status")]

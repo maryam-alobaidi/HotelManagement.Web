@@ -62,6 +62,8 @@ namespace HotelManagement.Web.Models.ViewModels.BookingModel
         [EnumDataType(typeof(BookingStatusEnum), ErrorMessage = "Invalid booking status.")]
         public BookingStatusEnum BookingStatus { get; set; }
 
+        public IEnumerable<SelectListItem>? BookingStatuses { get; set; }
+
         [Display(Name = "Booked By Employee")] // Display name for dropdown
         public int? BookedByEmployeeID { get; set; }
         // You'd also need a SelectList for Employee dropdowns:

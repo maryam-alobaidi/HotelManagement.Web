@@ -86,6 +86,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                     }
                     else
                     {
+                        _logger.LogWarning("No employee found with ID {Id}", id);
                         return null;
                     }
                 }
@@ -118,6 +119,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                     if (sqlEx.Message.Contains("No Employee ID found with the provided ID to update.") ||
                              sqlEx.Message.Contains("No records found to update for the provided ID."))
                     {
+                        _logger.LogWarning("Update failed: {Message}", sqlEx.Message);
                         return false;
                     }
 

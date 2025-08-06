@@ -3,6 +3,7 @@ using HotelManagement.Infrastructure.DAL.Interfaces;
 using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Data;
+using Microsoft.Extensions.Logging;
 
 namespace HotelManagement.Infrastructure.DAL.Repositories
 {
@@ -10,10 +11,12 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
     {
 
         private readonly string _connectionString;
+        private readonly ILogger<RoomStatusesRepository> _logger;
 
-        public RoomStatusesRepository(string connectionString)
+        public RoomStatusesRepository(string connectionString, ILogger<RoomStatusesRepository> logger)
         {
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+            _logger = logger;
         }
 
         public async Task<int?> AddAsync(RoomStatus roomStatus)
@@ -24,8 +27,6 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 command.CommandType = System.Data.CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@StatusName", roomStatus.StatusName);
                 command.Parameters.AddWithValue("@Description", (object)roomStatus.Description??DBNull.Value);
-                command.Parameters.Add("@RoomStatusID", System.Data.SqlDbType.Int).Direction = System.Data.ParameterDirection.Output;
-             
                 command.Parameters.Add("@RoomStatusID", System.Data.SqlDbType.Int).Direction = System.Data.ParameterDirection.Output;
 
                 return await PrimaryFunctions.AddAsync(command, _connectionString, "@RoomStatusID");
@@ -120,6 +121,19 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 }
             }
         }
+    
+        private RoomStatus MapToRoomStatuse(SqlDataReader reader)
+        {
+            return new RoomStatus
+           (
+                 roomStatusID: reader.GetInt32(reader.GetOrdinal(nameof(RoomStatus.RoomStatusID))), 
+                 statusName: reader.GetString(reader.GetOrdinal(nameof(RoomStatus.StatusName))),
+                 description: reader.IsDBNull(reader.GetOrdinal(nameof(RoomStatus.Description))) ? null : reader.GetString(reader.GetOrdinal(nameof(RoomStatus.Description)))
+                
+           );
+        }
+
+
         public async Task<bool> UpdateAsync(RoomStatus roomStatus)
         {
             using (SqlCommand command = new SqlCommand("Sp_UpdateRoomStatuses"))
@@ -142,6 +156,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                     if (sqlEx.Message.Contains("No Room Status ID found with the provided ID to update.") ||
                              sqlEx.Message.Contains("No records found to update for the provided ID."))
                     {
+                        _logger.LogWarning($"Update failed for RoomStatusID {roomStatus.RoomStatusID}: {sqlEx.Message}");
                         return false;
                     }
 
@@ -149,18 +164,6 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 }
             }
         }
-        private RoomStatus MapToRoomStatuse(SqlDataReader reader)
-        {
-            return new RoomStatus
-           (
-                 roomStatusID: reader.GetInt32(reader.GetOrdinal(nameof(RoomStatus.RoomStatusID))), // Use nameof for safety  
-                 statusName: reader.IsDBNull(reader.GetOrdinal(nameof(RoomStatus.StatusName))) ? null : reader.GetString(reader.GetOrdinal(nameof(RoomStatus.StatusName))),
-                 description: reader.IsDBNull(reader.GetOrdinal(nameof(RoomStatus.Description))) ? null : reader.GetString(reader.GetOrdinal(nameof(RoomStatus.Description)))
-                
-           );
-        }
-
-
         public async Task<IEnumerable<RoomStatus>> GetAllRoomStatusesAsync()
         {
             List<RoomStatus> roomStatuses = new List<RoomStatus>();

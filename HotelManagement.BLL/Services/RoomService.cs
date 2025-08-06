@@ -6,12 +6,15 @@ using System.Security.AccessControl;
 using Microsoft.AspNetCore.Mvc.Rendering;
 namespace HotelManagement.BLL.Services;
 
+
+//Make sure if the total price Calculation automatic in the create booking page,i will check in another time
 public class RoomService : IRoomService
 {
 
     private readonly IRoomRepository _roomRepository;
     private readonly IRoomTypesRepository _roomTypesRepository;
     private readonly IRoomStatusesRepository _roomStatusesRepository;
+    
 
     public RoomService(IRoomRepository roomRepository,IRoomTypesRepository roomTypesRepository, IRoomStatusesRepository roomStatusesRepository)
     {
@@ -106,10 +109,61 @@ public class RoomService : IRoomService
         }).OrderBy(item => item.Text).ToList(); 
     }
 
-    //public Task<IEnumerable<Room>> GetAvailableRoomsAsync(DateTime startDate, DateTime endDate)
-    //{
-    //    throw new NotImplementedException();
-    //}
+
+    public async Task<IEnumerable<Room>> GetAvailableRoomsAsync(DateTime startDate, DateTime endDate)
+    {
+        return await _roomRepository.GetAvailableRoomsAsync(startDate, endDate);
+    }
+
+    
+    public async Task<decimal> CalculateTotalPriceAsync(int roomID, DateTime checkInDate, DateTime checkOutDate, int numAdults, int? numChildren)
+    {
+        // 1. Fetch room details from the repository
+        Room? room = await _roomRepository.GetByIdAsync(roomID);
+        if (room == null)
+        {
+         
+            throw new KeyNotFoundException($"Room with ID {roomID} not found.");
+        }
+
+        // 2. Validate booking dates
+        if (checkInDate >= checkOutDate)
+        {            
+            throw new ArgumentException("Check-in date must be earlier than check-out date.");
+        }
+
+        // 3. Calculate number of nights
+        int numberOfNights = (checkOutDate - checkInDate).Days;
+
+        decimal extraAdultFeePerNight = 100; 
+        decimal extraChildFeePerNight = 50;
+
+        decimal baseRoomPricePerNight = room.PricePerNight ?? 0;
+
+        decimal totalPrice = 0;
+
+
+        totalPrice+=baseRoomPricePerNight * numberOfNights;
+        if (numAdults > 2) // Assuming 2 adults are included in the base price
+        {
+            int extraAdults = numAdults - 2;
+            totalPrice += extraAdults * extraAdultFeePerNight * numberOfNights;
+        }
+
+        if (numChildren.HasValue && numChildren.Value > 0)
+        {
+            totalPrice += (numChildren.Value * extraChildFeePerNight) * numberOfNights;
+        }
+
+        // Ensure the total price is not negative or zero
+        if (totalPrice <= 0)
+        {
+          
+            throw new InvalidOperationException("Calculated total price must be greater than zero.");
+        }
+
+        return totalPrice;
+    }
 
     //public Task<IEnumerable<Room>> GetRoomsByStatusAsync(int roomStatusId)
     //{

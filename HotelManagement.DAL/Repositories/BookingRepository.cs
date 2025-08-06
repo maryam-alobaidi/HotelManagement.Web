@@ -2,6 +2,7 @@
 using HotelManagement.Domain.Enums;
 using HotelManagement.Infrastructure.DAL.Interfaces;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
 using System.Data;
 
 
@@ -10,9 +11,11 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
     public class BookingRepository : IBookingRepository
     {
         private readonly string _connectionString;
-        public BookingRepository(string connectionString)
+        private readonly ILogger<BookingRepository> _logger;
+        public BookingRepository(string connectionString, ILogger<BookingRepository> logger)
         {
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString), "Connection string cannot be null.");
+            _logger = logger;
         }
 
         public async Task<int?> AddAsync(Booking booking)
@@ -82,6 +85,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                     }
                     else
                     {
+                        _logger.LogWarning("No booking found with ID {BookingID}", id);
                         return null;
                     }
                 }
@@ -119,6 +123,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                     if (sqlEx.Message.Contains("No Booking ID found with the provided ID to update.") ||
                              sqlEx.Message.Contains("No records found to update for the provided ID."))
                     {
+                        _logger.LogWarning("Update failed: {Message}", sqlEx.Message);
                         return false;
                     }
 

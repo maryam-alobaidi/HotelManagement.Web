@@ -1,5 +1,91 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model HotelManagement.Web.Models.ViewModels.BookingModel.BookingEditViewModel
+
 @{
+    ViewData["Title"] = "Edit Booking";
+}
+
+<h1>Edit Booking</h1>
+
+<h4>Booking Details</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="BookingID" />
+
+            <div class="form-group mb-3">
+                <label asp-for="RoomID" class="form-label"></label>
+                <select asp-for="RoomID" asp-items="@(new SelectList(Model.Rooms, "Value", "Text"))" class="form-select">
+                    <option value="">-- Select a Room --</option>
+                </select>
+                <span asp-validation-for="RoomID" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CustomerID" class="form-label"></label>
+                <select asp-for="CustomerID" asp-items="@(new SelectList(Model.Customers, "Value", "Text"))" class="form-select">
+                    <option value="">-- Select a Customer --</option>
+                </select>
+                <span asp-validation-for="CustomerID" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CheckInDate" class="form-label"></label>
+                <input asp-for="CheckInDate" type="date" class="form-control" />
+                <span asp-validation-for="CheckInDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CheckOutDate" class="form-label"></label>
+                <input asp-for="CheckOutDate" type="date" class="form-control" />
+                <span asp-validation-for="CheckOutDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="NumAdults" class="form-label"></label>
+                <input asp-for="NumAdults" type="number" class="form-control" />
+                <span asp-validation-for="NumAdults" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="NumChildren" class="form-label"></label>
+                <input asp-for="NumChildren" type="number" class="form-control" />
+                <span asp-validation-for="NumChildren" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="TotalPrice" class="form-label"></label>
+                <input asp-for="TotalPrice" class="form-control" readonly />
+                <span asp-validation-for="TotalPrice" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="BookingStatus" class="form-label"></label>
+                <select asp-for="BookingStatus" asp-items="@(new SelectList(Model.BookingStatuses, "Value", "Text"))" class="form-select"></select>
+                <span asp-validation-for="BookingStatus" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="BookedByEmployeeID" class="form-label"></label>
+                <select asp-for="BookedByEmployeeID" asp-items="@(new SelectList(Model.Employees, "Value", "Text"))" class="form-select">
+                    <option value="">-- Select an Employee --</option>
+                </select>
+                <span asp-validation-for="BookedByEmployeeID" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-4">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

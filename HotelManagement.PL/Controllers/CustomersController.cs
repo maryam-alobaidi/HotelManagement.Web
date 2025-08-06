@@ -244,7 +244,11 @@ namespace HotelManagement.Web.Controllers
             try
             {
                
-                await _customerService.DeleteCustomerAsync(id);
+              bool isDelelted=  await _customerService.DeleteCustomerAsync(id);
+                if (!isDelelted)
+                {
+                    return NotFound("Customer could not be deleted.");
+                }
             }
             catch (Exception ex)
             {

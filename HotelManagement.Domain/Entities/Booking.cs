@@ -71,7 +71,7 @@ namespace HotelManagement.Domain.Entities
           
         }
 
-        private Booking()
+        public Booking()
         {
 
         }

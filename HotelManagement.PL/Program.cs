@@ -33,13 +33,13 @@ namespace HotelManagement.Web
 
             builder.Services.AddScoped<IEmployeeRepository>(provider => new EmployeeRepository(connectionString, provider.GetRequiredService<ILogger<EmployeeRepository>>()));
 
-            builder.Services.AddScoped<IRoomRepository>(providor => new RoomRepository(connectionString));
+            builder.Services.AddScoped<IRoomRepository>(provider => new RoomRepository(connectionString, provider.GetRequiredService < ILogger < RoomRepository >>()));
 
-            builder.Services.AddScoped<IRoomTypesRepository>(providor => new RoomTypesRepository(connectionString));
+            builder.Services.AddScoped<IRoomTypesRepository>(provider => new RoomTypesRepository(connectionString));
 
-            builder.Services.AddScoped<IRoomStatusesRepository>(providor => new RoomStatusesRepository(connectionString));
+            builder.Services.AddScoped<IRoomStatusesRepository>(provider => new RoomStatusesRepository(connectionString, provider.GetRequiredService <ILogger<RoomStatusesRepository>>()));
 
-            builder.Services.AddScoped<IBookingRepository>(provider => new BookingRepository(connectionString));
+            builder.Services.AddScoped<IBookingRepository>(provider => new BookingRepository(connectionString, provider.GetRequiredService <ILogger<BookingRepository>>()));
 
             builder.Services.AddScoped<IInvoiceItemRepository>(provider => new InvoiceItemRepository(connectionString));
 

@@ -35,9 +35,11 @@ namespace HotelManagement.BLL.Services
                 if (employee == null) throw new KeyNotFoundException("Employee not found.");
             }
 
-            bool isRoomAvailable = await _bookingRepository.IsRoomAvailable(booking.RoomID, booking.CheckInDate, booking.CheckOutDate);
 
-            if(!isRoomAvailable) throw new InvalidOperationException("Room is not available for the selected dates.");
+            //// at here the  problem is that the booking is not calculated with the room price
+            //bool isRoomAvailable = await _bookingRepository.IsRoomAvailable(booking.RoomID, booking.CheckInDate, booking.CheckOutDate);
+
+            //if(!isRoomAvailable) throw new InvalidOperationException("Room is not available for the selected dates.");
 
             return await _bookingRepository.AddAsync(booking);
         }
@@ -85,6 +87,9 @@ namespace HotelManagement.BLL.Services
             existingBooking.CheckOutDate = booking.CheckOutDate;
             existingBooking.NumAdults = booking.NumAdults;
             existingBooking.NumChildren = booking.NumChildren;
+            existingBooking.TotalPrice = booking.TotalPrice;
+            existingBooking.BookingStatus = booking.BookingStatus;
+            existingBooking.BookedByEmployeeID = booking.BookedByEmployeeID;
 
 
             Room? room = await _roomRepository.GetByIdAsync(booking.RoomID);
@@ -94,8 +99,9 @@ namespace HotelManagement.BLL.Services
                 throw new KeyNotFoundException("Room not found for price calculation.");
             }
 
-            existingBooking.CalculateTotalPrice(room.PricePerNight.Value);
 
+
+           
            return await _bookingRepository.UpdateAsync(existingBooking);
         }
 

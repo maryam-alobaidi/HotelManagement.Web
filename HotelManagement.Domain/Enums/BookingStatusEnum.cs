@@ -1,5 +1,4 @@
 ﻿
-
 namespace HotelManagement.Domain.Enums
 {
     public enum BookingStatusEnum

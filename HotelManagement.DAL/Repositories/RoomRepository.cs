@@ -1,21 +1,23 @@
-﻿using HotelManagement.Infrastructure.DAL.Interfaces;
-using HotelManagement.Domain.Entities;
+﻿using HotelManagement.Domain.Entities;
+using HotelManagement.Infrastructure.DAL.Interfaces;
 using Microsoft.Data.SqlClient;
-using HotelManagement.Infrastructure.DAL.Repositories;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
+
 
 namespace HotelManagement.Infrastructure.DAL.Repositories
 {
     public class RoomRepository : IRoomRepository
     {
         private readonly string _connectionString;
+        private readonly ILogger<RoomRepository> _logger;
 
-        public RoomRepository(string connectionString)
+        public RoomRepository(string connectionString, ILogger<RoomRepository> logger)
         {
             if (string.IsNullOrWhiteSpace(connectionString)) throw new ArgumentException("Connection string cannot be null or empty.", nameof(connectionString));
 
             _connectionString = connectionString;
 
+            _logger = logger;
         }
         public async Task<int?> AddAsync(Room room)
         {
@@ -70,6 +72,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                     if (sqlEx.Message.Contains("No Room ID found with the provided ID to update.") ||
                              sqlEx.Message.Contains("No records found to update for the provided ID."))
                     {
+                        _logger.LogWarning($"Update failed for Room ID {room.RoomID}: {sqlEx.Message}");
                         return false;
                     }
 
@@ -109,12 +112,14 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                     }
                     else
                     {
+                        _logger.LogWarning($"No room found with ID {id}.");
                         return null; 
                     }
 
                 }
             }
         }
+      
         private Room MapToRoom(SqlDataReader reader)
         {
             // First, create the Room object using your existing constructor
@@ -152,6 +157,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                     }
                     else
                     {
+                        _logger.LogWarning($"No room found with RoomNumber {RoomNumber}.");
                         return null; // No room found with the given RoomNumber
                     }
                 }
@@ -159,9 +165,25 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
 
         }
 
+        public async Task<IEnumerable<Room>> GetAvailableRoomsAsync(DateTime startDate, DateTime endDate)
+        {
+            List<Room> avilableRooms = new List<Room>();
+            using (SqlCommand command = new SqlCommand("Sp_GetAvilableRooms"))
+            {
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@StartDate", startDate);
+                command.Parameters.AddWithValue("@EndDate", endDate);
 
+                using (SqlDataReader reader = await PrimaryFunctions.GetAsync(command, _connectionString))
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        avilableRooms.Add(MapToRoom(reader));
+                    }
+                }
 
-     
-
+                return avilableRooms;
+            }
+        }
     }
 }

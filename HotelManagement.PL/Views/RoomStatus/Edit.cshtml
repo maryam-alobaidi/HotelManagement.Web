@@ -1,0 +1,68 @@
+﻿@model HotelManagement.Web.Models.ViewModels.RoomStatusModel.RoomStatusCreateEditViewModel
+
+@{
+    ViewData["Title"] = "Edit Room Status";
+}
+
+<!-- Load Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #eef2f6; /* Consistent background */
+    }
+</style>
+
+<div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8 flex justify-center items-center min-h-screen">
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-lg">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-gray-900 mb-2">Edit Room Status</h1>
+            <p class="text-gray-600">Update the details for this room status.</p>
+        </div>
+
+        <form asp-action="Edit" method="post" class="space-y-6">
+            @Html.AntiForgeryToken()
+
+            <!-- Hidden input for RoomStatusID (essential for editing) -->
+            <input type="hidden" asp-for="RoomStatusID" />
+
+            <!-- Validation Summary for general errors -->
+            <div asp-validation-summary="ModelOnly" class="text-red-600 font-medium text-sm rounded-md p-3 bg-red-50 border border-red-200"></div>
+
+            <!-- Status Name Field -->
+            <div>
+                <label asp-for="StatusName" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                <input asp-for="StatusName" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out" />
+                <span asp-validation-for="StatusName" class="text-red-500 text-xs mt-1 block"></span>
+            </div>
+
+            <!-- Description Field -->
+            <div>
+                <label asp-for="Description" class="block text-sm font-medium text-gray-700 mb-1"></label>
+                <textarea asp-for="Description" rows="3" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out"></textarea>
+                <span asp-validation-for="Description" class="text-red-500 text-xs mt-1 block"></span>
+            </div>
+
+         
+           
+            <!-- Action Buttons -->
+            <div class="flex justify-end space-x-4 pt-4">
+                <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent rounded-full shadow-lg text-base font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50">
+                    <svg class="-ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                    Save Changes
+                </button>
+                <a asp-action="Index" class="inline-flex items-center px-6 py-3 border border-gray-300 rounded-full shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out transform hover:scale-105">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
