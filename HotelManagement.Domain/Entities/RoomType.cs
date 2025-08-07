@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace HotelManagement.Domain.Entities
 {
     public class RoomType
     {
         public int RoomTypeID { get; set; }
         public string TypeName { get;  set; }
-        public string? Description { get; private set; }
-        public decimal BasePrice { get; private set; }
-        public int? MaxOccupancy { get; private set; }
-        public string? Amenities { get; private set; }
+        public string? Description { get;  set; }
+        public decimal BasePrice { get;  set; }
+        public int? MaxOccupancy { get;  set; }
+        public string? Amenities { get;  set; }
 
         public RoomType(string typeName, string? description, decimal basePrice, int? maxOccupancy, string? amenities)
         {

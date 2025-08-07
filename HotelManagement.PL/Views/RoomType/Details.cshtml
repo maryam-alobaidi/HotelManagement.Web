@@ -1,0 +1,54 @@
+﻿@model HotelManagement.Web.Models.ViewModels.RoomTypeModel.RoomTypeViewModel
+
+@{
+    ViewData["Title"] = "Room Type Details";
+}
+
+<!-- Load Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f3f4f6;
+    }
+</style>
+
+<div class="container mx-auto px-4 py-8 flex justify-center items-center min-h-screen">
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-lg">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-gray-900 mb-2">Room Type Details</h1>
+            <p class="text-gray-600">Details for room type: @Html.DisplayFor(model => model.TypeName)</p>
+        </div>
+
+        <div class="bg-gray-50 rounded-lg p-6 mb-8 border border-gray-200">
+            <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                <dt class="text-gray-500 font-medium">@Html.DisplayNameFor(model => model.TypeName)</dt>
+                <dd class="text-gray-900 font-semibold">@Html.DisplayFor(model => model.TypeName)</dd>
+
+                <dt class="text-gray-500 font-medium mt-2">@Html.DisplayNameFor(model => model.Description)</dt>
+                <dd class="text-gray-900 mt-2">@Html.DisplayFor(model => model.Description)</dd>
+
+                <dt class="text-gray-500 font-medium mt-2">@Html.DisplayNameFor(model => model.BasePrice)</dt>
+                <dd class="text-gray-900 mt-2">@Html.DisplayFor(model => model.BasePrice)</dd>
+
+                <dt class="text-gray-500 font-medium mt-2">@Html.DisplayNameFor(model => model.MaxOccupancy)</dt>
+                <dd class="text-gray-900 mt-2">@Html.DisplayFor(model => model.MaxOccupancy)</dd>
+
+                <dt class="text-gray-500 font-medium mt-2">@Html.DisplayNameFor(model => model.Amenities)</dt>
+                <dd class="text-gray-900 mt-2">@Html.DisplayFor(model => model.Amenities)</dd>
+            </dl>
+        </div>
+
+        <div class="flex justify-start space-x-4 pt-4">
+            <a asp-action="Edit" asp-route-id="@Model.RoomTypeID" class="inline-flex items-center px-6 py-3 border border-transparent rounded-full shadow-lg text-base font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50">
+                <svg class="-ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                </svg>
+                Edit
+            </a>
+            <a asp-action="Index" class="inline-flex items-center px-6 py-3 border border-gray-300 rounded-full shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out transform hover:scale-105">
+                Back to List
+            </a>
+        </div>
+    </div>
+</div>

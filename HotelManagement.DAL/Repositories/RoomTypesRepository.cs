@@ -3,6 +3,7 @@ using HotelManagement.Infrastructure.DAL.Interfaces;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 
 
 namespace HotelManagement.Infrastructure.DAL.Repositories
@@ -10,11 +11,13 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
     public class RoomTypesRepository : IRoomTypesRepository
     {
         private readonly string _connectionString;
-        public RoomTypesRepository(string connectionString)
+        private readonly ILogger<RoomTypesRepository> _logger;
+        public RoomTypesRepository(string connectionString,ILogger<RoomTypesRepository> logger)
         {
             if (string.IsNullOrWhiteSpace(connectionString)) throw new ArgumentException("Connection string cannot be null or empty.", nameof(connectionString));
 
             _connectionString = connectionString;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
 
         }
 
@@ -69,6 +72,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 try
                 {
                     await PrimaryFunctions.UpdateAsync(command, _connectionString);
+                    _logger.LogInformation($"RoomType with ID {roomType.RoomTypeID} updated successfully.");
 
                     return true;
                 }
@@ -78,6 +82,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                     if (sqlEx.Message.Contains("No Room Type ID found with the provided ID to update.") ||
                              sqlEx.Message.Contains("No records found to update for the provided ID."))
                     {
+                        _logger.LogWarning($"Update failed for RoomType with ID {roomType.RoomTypeID}: {sqlEx.Message}");
                         return false;
                     }
 
@@ -166,7 +171,6 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 }
             }
         }
-
 
         public async Task<IEnumerable<RoomType>> GetAllRoomTypesAsync()
         {

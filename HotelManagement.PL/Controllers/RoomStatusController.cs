@@ -2,6 +2,7 @@
 using HotelManagement.Domain.Entities;
 using HotelManagement.Web.Models.ViewModels.RoomStatusModel;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 
@@ -233,8 +234,9 @@ namespace HotelManagement.Web.Controllers
         }
 
         // POST: RoomStatusController/Delete/5
-        [HttpPost]
+       
         [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
 

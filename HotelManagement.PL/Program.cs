@@ -35,7 +35,7 @@ namespace HotelManagement.Web
 
             builder.Services.AddScoped<IRoomRepository>(provider => new RoomRepository(connectionString, provider.GetRequiredService < ILogger < RoomRepository >>()));
 
-            builder.Services.AddScoped<IRoomTypesRepository>(provider => new RoomTypesRepository(connectionString));
+          builder.Services.AddScoped<IRoomTypesRepository>(provider => new RoomTypesRepository(connectionString,provider.GetRequiredService<ILogger<RoomTypesRepository>>()));
 
             builder.Services.AddScoped<IRoomStatusesRepository>(provider => new RoomStatusesRepository(connectionString, provider.GetRequiredService <ILogger<RoomStatusesRepository>>()));
 
