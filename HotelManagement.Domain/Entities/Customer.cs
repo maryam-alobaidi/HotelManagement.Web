@@ -4,14 +4,14 @@ namespace HotelManagement.Domain.Entities
 {
     public class Customer
     {
-        public int CustomerID { get;private set; }
-        public  string Firstname { get; private set; }
-        public  string Lastname { get; private set; }
-        public  string Email { get; private set; }
-        public  string PhoneNumber { get; private set; }
-        public string? Address { get; private set; }
-        public  string Nationality { get; private set; }
-        public  string IDNumber { get; private set; }
+        public int CustomerID { get; set; }
+        public  string Firstname { get;  set; }
+        public  string Lastname { get;  set; }
+        public  string Email { get;  set; }
+        public  string PhoneNumber { get;  set; }
+        public string? Address { get;  set; }
+        public  string Nationality { get;  set; }
+        public  string IDNumber { get;  set; }
 
         public string FullName => $"{Firstname} {Lastname}"; // Property to get full name of the customer
 

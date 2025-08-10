@@ -10,5 +10,7 @@ namespace HotelManagement.BLL.Interfaces
         Task<bool> UpdateBookingAsync(Booking booking);
         Task<bool> DeleteBookingAsync(int id);
 
+        Task<IEnumerable<Booking>> GetBookingsWithAllDetails();
+
     }
 }

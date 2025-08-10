@@ -15,5 +15,6 @@ namespace HotelManagement.Infrastructure.DAL.Interfaces
         Task<IEnumerable<Booking>> GetAllAsync();
         Task<Booking?> GetByIdAsync(int id);
         Task<bool> IsRoomAvailable(int roomID,DateTime checkInDate,DateTime checkOutDate,int? bookingIdToExclude=null);
+        Task<IEnumerable<Booking>> GetBookingsWithAllDetails();
     }
 }

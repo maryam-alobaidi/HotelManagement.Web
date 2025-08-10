@@ -1,0 +1,141 @@
+﻿@model HotelManagement.Web.Models.ViewModels.InvoiceModel.InvoiceCreateEditViewModel
+
+@{
+    ViewData["Title"] = "Create Invoice";
+}
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card my-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Create New Invoice</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Booking Dropdown -->
+                    <div class="form-group mb-3">
+                        <label asp-for="BookingID" class="control-label"></label>
+                        <select asp-for="BookingID" class="form-control" asp-items="@(new SelectList(Model.Bookings, "Value", "Text"))" id="bookingDropdown">
+                            <option value="">-- Select Booking --</option>
+                        </select>
+                        <span asp-validation-for="BookingID" class="text-danger"></span>
+                    </div>
+
+                    <!-- Hidden fields for CustomerID and EmployeeID -->
+                    <input type="hidden" asp-for="CustomerID" id="customerId" />
+                    <input type="hidden" asp-for="GeneratedByEmployeeID" id="employeeId" />
+
+                    <!-- Customer Name (Readonly) -->
+                    <div class="form-group mb-3">
+                        <label asp-for="CustomerName" class="control-label"></label>
+                        <input asp-for="CustomerName" class="form-control" readonly id="customerName" />
+                        <span asp-validation-for="CustomerName" class="text-danger"></span>
+                    </div>
+                    ؤ
+                    <!-- Employee Name (Readonly) -->
+                    <div class="form-group mb-3">
+                        <label asp-for="EmployeeName" class="control-label"></label>
+                        <input asp-for="EmployeeName" class="form-control" readonly id="employeeName" />
+                        <span asp-validation-for="EmployeeName" class="text-danger"></span>
+                    </div>
+
+                    <!-- Invoice Date -->
+                    <div class="form-group mb-3">
+                        <label asp-for="InvoiceDate" class="control-label"></label>
+                        <input asp-for="InvoiceDate" class="form-control" />
+                        <span asp-validation-for="InvoiceDate" class="text-danger"></span>
+                    </div>
+
+                    <!-- Total Amount (Readonly) -->
+                    <div class="form-group mb-3">
+                        <label asp-for="TotalAmount" class="control-label"></label>
+                        <input asp-for="TotalAmount" class="form-control" readonly id="totalAmount" />
+                        <span asp-validation-for="TotalAmount" class="text-danger"></span>
+                    </div>
+
+                    <!-- Amount Paid -->
+                    <div class="form-group mb-3">
+                        <label asp-for="AmountPaid" class="control-label"></label>
+                        <input asp-for="AmountPaid" class="form-control" id="amountPaidInput" />
+                        <span asp-validation-for="AmountPaid" class="text-danger"></span>
+                    </div>
+
+                    <!-- Balance Due (Readonly and calculated) -->
+                    <div class="form-group mb-3">
+                        <label asp-for="BalanceDue" class="control-label"></label>
+                        <input asp-for="BalanceDue" class="form-control" readonly id="balanceDue" />
+                        <span asp-validation-for="BalanceDue" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary mt-3">Create</button>
+                        <a asp-action="Index" class="btn btn-secondary mt-3">Back to List</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            // Function to calculate and update BalanceDue
+            function updateBalanceDue() {
+                var totalAmount = parseFloat($('#totalAmount').val()) || 0;
+                var amountPaid = parseFloat($('#amountPaidInput').val()) || 0;
+                var balanceDue = totalAmount - amountPaid;
+                $('#balanceDue').val(balanceDue.toFixed(2));
+            }
+
+            // Initial call to update balance
+            updateBalanceDue();
+
+            // When the booking dropdown changes, update the amounts
+            $('#bookingDropdown').change(function () {
+                var bookingId = $(this).val();
+                if (bookingId) {
+                    $.ajax({
+                        url: '@Url.Action("GetBookingDetails", "Invoice")',
+                        type: 'GET',
+                        data: { bookingId: bookingId },
+                        success: function (data) {
+                            if (data) {
+                                $('#customerId').val(data.customerID);
+                                $('#customerName').val(data.customerName);
+                                $('#employeeId').val(data.employeeID);
+                                $('#employeeName').val(data.employeeName);
+                                $('#totalAmount').val(data.totalAmount);
+                                $('#amountPaidInput').val(0); // Reset amount paid to 0
+                                updateBalanceDue(); // Update the balance
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.error("Error fetching booking details: " + textStatus);
+                        }
+                    });
+                } else {
+                    // Reset all fields if no booking is selected
+                    $('#customerId').val('');
+                    $('#customerName').val('');
+                    $('#employeeId').val('');
+                    $('#employeeName').val('');
+                    $('#totalAmount').val(0);
+                    $('#amountPaidInput').val(0);
+                    updateBalanceDue();
+                }
+            });
+
+            // When Amount Paid input changes, update the balance due
+            $('#amountPaidInput').on('input', function() {
+                updateBalanceDue();
+            });
+        });
+    </script>
+}

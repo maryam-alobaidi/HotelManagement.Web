@@ -23,7 +23,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
             using (SqlCommand command = new SqlCommand("Sp_AddNewBooking"))
             {
                 command.CommandType = CommandType.StoredProcedure;
-          
+
                 command.Parameters.AddWithValue("@RoomID", booking.RoomID);
                 command.Parameters.AddWithValue("@CustomerID", booking.CustomerID);
                 command.Parameters.AddWithValue("@CheckInDate", booking.CheckInDate);
@@ -46,7 +46,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@BookingID", id);
-              return  await PrimaryFunctions.DeleteAsync(command, _connectionString);
+                return await PrimaryFunctions.DeleteAsync(command, _connectionString);
             }
         }
 
@@ -206,18 +206,76 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
 
         public async Task<bool> IsRoomAvailable(int roomID, DateTime checkInDate, DateTime checkOutDate, int? bookingIdToExclude = null)
         {
-            using(SqlCommand command = new SqlCommand("Sp_IsRoomAvailable"))
+            using (SqlCommand command = new SqlCommand("Sp_IsRoomAvailable"))
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@RoomID", roomID);
                 command.Parameters.AddWithValue("@CheckInDate", checkInDate);
-                command.Parameters.AddWithValue("@CheckOutDate",checkOutDate);
-                command.Parameters.AddWithValue("@BookingIDToExclude",bookingIdToExclude.HasValue? bookingIdToExclude.Value:DBNull.Value);
+                command.Parameters.AddWithValue("@CheckOutDate", checkOutDate);
+                command.Parameters.AddWithValue("@BookingIDToExclude", bookingIdToExclude.HasValue ? bookingIdToExclude.Value : DBNull.Value);
 
                 return await PrimaryFunctions.IsRoomAvailable(command, _connectionString);
-            } 
+            }
+        }
+
+        public async Task<IEnumerable<Booking>> GetBookingsWithAllDetails()
+        {
+            List<Booking> bookings = new List<Booking>();
+            using (SqlCommand command = new SqlCommand("SP_GetBookingsWithAllDetails"))
+            {
+
+                command.CommandType = CommandType.StoredProcedure;
+                SqlDataReader reader = await PrimaryFunctions.GetAsync(command, _connectionString);
+                while (reader.Read())
+                {
+                    bookings.Add(MapBookingWithDetails(reader));
+                }
+
+            }
+            return bookings;
         }
 
 
+        public Booking MapBookingWithDetails(SqlDataReader reader)
+        {
+            // 1. Create a Customer object by mapping the aliased columns from the reader.
+            var customer = new Customer
+            {
+                CustomerID = reader.GetInt32(reader.GetOrdinal("CustomerID")),
+                // The column names must match the aliases defined in the stored procedure.
+                Firstname = reader.GetString(reader.GetOrdinal("CustomerFirstName")),
+                Lastname = reader.GetString(reader.GetOrdinal("CustomerLastName")),
+                Email = reader.GetString(reader.GetOrdinal("CustomerEmail"))
+            };
+
+            // 2. Create an Employee object by mapping the aliased columns.
+            // The INNER JOIN in the stored procedure ensures these columns will not be null.
+            var employee = new Employee
+            {
+                EmployeeID = reader.GetInt32(reader.GetOrdinal("EmployeeID")),
+                FirstName = reader.GetString(reader.GetOrdinal("EmployeeFirstName")),
+                LastName = reader.GetString(reader.GetOrdinal("EmployeeLastName")),
+                Role = reader.GetString(reader.GetOrdinal("EmployeeRole"))
+            };
+
+            // 3. Create the main Booking object and populate its properties.
+            var booking = new Booking
+            {
+                BookingID = reader.GetInt32(reader.GetOrdinal("BookingID")),
+                CheckInDate = reader.GetDateTime(reader.GetOrdinal("CheckInDate")),
+                CheckOutDate = reader.GetDateTime(reader.GetOrdinal("CheckOutDate")),
+                // Use the alias "BookingTotalPrice" from the stored procedure.
+                TotalPrice = reader.GetDecimal(reader.GetOrdinal("BookingTotalPrice")),
+                // Correctly cast the integer to the enum type.
+                BookingStatus = (BookingStatusEnum)reader.GetInt32(reader.GetOrdinal("BookingStatus")),
+
+                // 4. Assign the created Customer and Employee objects to the Booking.
+                Customer = customer,
+                // The property for the employee who generated the booking is "GeneratedByEmployee".
+                Employee = employee
+            };
+
+            return booking;
+        }
     }
-}
+    }

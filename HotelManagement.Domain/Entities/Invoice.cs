@@ -4,14 +4,14 @@ namespace HotelManagement.Domain.Entities
 {
     public  class Invoice
     {
-        public int InvoiceID { get; private set; }
-        public int BookingID { get; private set; }
-        public int CustomerID { get; private set; }
-        public DateTime InvoiceDate { get; private set; }
-        public decimal TotalAmount { get; private set; }
-        public decimal AmountPaid { get;  set; }
-        public decimal BalanceDue => TotalAmount - AmountPaid; 
-        public int GeneratedByEmployeeID { get; private set; }
+        public int InvoiceID { get;  set; }
+        public int BookingID { get;  set; }
+        public int CustomerID { get;  set; }
+        public DateTime? InvoiceDate { get;  set; }
+        public decimal TotalAmount { get;  set; }
+        public decimal? AmountPaid { get;  set; }
+        public decimal? BalanceDue => TotalAmount - AmountPaid; 
+        public int GeneratedByEmployeeID { get;  set; }
 
         public InvoiceStatusEnum InvoiceStatus { get;  set; }
         public  Booking? booking { get; set; }
@@ -42,7 +42,7 @@ namespace HotelManagement.Domain.Entities
             GeneratedByEmployeeID = generatedByEmployeeID;
         }
 
-        public Invoice(int invoiceID, int bookingID, int customerID, DateTime invoiceDate, decimal totalAmount, decimal amountPaid, int generatedByEmployeeID, InvoiceStatusEnum invoiceStatus)
+        public Invoice(int invoiceID, int bookingID, int customerID, DateTime? invoiceDate, decimal totalAmount, decimal? amountPaid, int generatedByEmployeeID, InvoiceStatusEnum invoiceStatus)
         {
             InvoiceID = invoiceID;
             BookingID = bookingID;
@@ -60,7 +60,7 @@ namespace HotelManagement.Domain.Entities
         /// <summary>
         /// 
         
-        public Invoice(int invoiceID, int bookingID, int customerID, DateTime invoiceDate, decimal totalAmount, decimal amountPaid, int generatedByEmployeeID, InvoiceStatusEnum invoiceStatus, Booking? booking = null, Customer? customer = null, Employee? employee = null)
+        public Invoice(int invoiceID, int bookingID, int customerID, DateTime? invoiceDate, decimal totalAmount, decimal? amountPaid, int generatedByEmployeeID, InvoiceStatusEnum invoiceStatus, Booking? booking = null, Customer? customer = null, Employee? employee = null)
         {
             InvoiceID = invoiceID;
             BookingID = bookingID;
@@ -77,42 +77,6 @@ namespace HotelManagement.Domain.Entities
 
         public Invoice()
         {
-        }
-
-
-        public void MakePayment(decimal paymentAmount)
-        {
-            if(paymentAmount<=0) throw new ArgumentException("Payment amount must be greater than zero.",nameof(paymentAmount));
-
-            if (InvoiceStatus== InvoiceStatusEnum.Paid || InvoiceStatus == InvoiceStatusEnum.Cancelled)
-                throw new InvalidOperationException("Cannot make a payment on a paid or cancelled invoice.");
-
-            AmountPaid += paymentAmount;
-
-            if (AmountPaid >= TotalAmount)
-            {
-                InvoiceStatus = InvoiceStatusEnum.Paid;
-
-            }
-            else if(AmountPaid > 0)
-            {
-                InvoiceStatus = InvoiceStatusEnum.PartiallyPaid;
-            }
-           
-        }
-
-    
-        public void CancelInvoice()
-        {
-
-            if (InvoiceStatus == InvoiceStatusEnum.Paid)
-                throw new InvalidOperationException("Cannot cancel a paid invoice.");
-
-            if(InvoiceStatus == InvoiceStatusEnum.  PartiallyPaid)
-                throw new InvalidOperationException("Cannot cancel a Partially paid invoice.");
-
-
-            InvoiceStatus = InvoiceStatusEnum.Cancelled;
         }
 
 

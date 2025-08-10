@@ -1,0 +1,170 @@
+﻿@model HotelManagement.Web.Models.ViewModels.InvoiceModel.InvoiceCreateEditViewModel
+
+@{
+    ViewData["Title"] = "Edit Invoice";
+}
+
+<!-- Load Tailwind CSS from CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f3f4f6;
+    }
+
+    .status-paid {
+        background-color: #d1fae5; /* Green */
+    }
+
+    .status-partially-paid {
+        background-color: #fef3c7; /* Yellow */
+    }
+
+    .status-unpaid {
+        background-color: #fee2e2; /* Red */
+    }
+</style>
+
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div id="invoiceCard" class="max-w-4xl w-full space-y-8 bg-white p-10 rounded-xl shadow-2xl transition-colors duration-300">
+        <div class="text-center">
+            <h2 class="mt-6 text-3xl font-bold text-gray-900">
+                Edit Invoice
+            </h2>
+            <p class="mt-2 text-sm text-gray-600">
+                Update the details of the selected invoice.
+            </p>
+        </div>
+
+        <form asp-action="Edit" asp-route-id="@Model.InvoiceID" class="mt-8 space-y-6">
+            <div asp-validation-summary="ModelOnly" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert"></div>
+            <input type="hidden" asp-for="InvoiceID" />
+            <input type="hidden" asp-for="InvoiceStatus" id="invoiceStatusInput" />
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Booking ID (Readonly) -->
+                <div>
+                    <label asp-for="BookingID" class="block text-sm font-medium text-gray-700"></label>
+                    <div class="mt-1">
+                        <input asp-for="BookingID" class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 bg-gray-100 text-gray-900" readonly />
+                    </div>
+                </div>
+
+                <!-- Customer ID (Readonly) -->
+                <div>
+                    <label asp-for="CustomerID" class="block text-sm font-medium text-gray-700"></label>
+                    <div class="mt-1">
+                        <input asp-for="CustomerID" class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 bg-gray-100 text-gray-900" readonly />
+                    </div>
+                </div>
+
+                <!-- Employee ID (Readonly) -->
+                <div>
+                    <label asp-for="GeneratedByEmployeeID" class="block text-sm font-medium text-gray-700"></label>
+                    <div class="mt-1">
+                        <input asp-for="GeneratedByEmployeeID" class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 bg-gray-100 text-gray-900" readonly />
+                    </div>
+                </div>
+
+                <!-- Invoice Date -->
+                <div>
+                    <label asp-for="InvoiceDate" class="block text-sm font-medium text-gray-700"></label>
+                    <div class="mt-1">
+                        <input asp-for="InvoiceDate" type="date" class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="invoiceDateInput" />
+                        <span asp-validation-for="InvoiceDate" class="text-xs text-red-500 mt-1 block"></span>
+                    </div>
+                </div>
+
+                <!-- Total Amount (Readonly) -->
+                <div>
+                    <label asp-for="TotalAmount" class="block text-sm font-medium text-gray-700"></label>
+                    <div class="mt-1">
+                        <input asp-for="TotalAmount" class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 bg-gray-100 text-gray-900 focus:outline-none sm:text-sm" readonly id="TotalAmount" />
+                        <span asp-validation-for="TotalAmount" class="text-xs text-red-500 mt-1 block"></span>
+                    </div>
+                </div>
+
+                <!-- Amount Paid (Editable) -->
+                <div>
+                    <label asp-for="AmountPaid" class="block text-sm font-medium text-gray-700"></label>
+                    <div class="mt-1">
+                        <input asp-for="AmountPaid" class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="amountPaidInput" />
+                        <span asp-validation-for="AmountPaid" class="text-xs text-red-500 mt-1 block"></span>
+                    </div>
+                </div>
+
+                <!-- Balance Due (Readonly) -->
+                <div>
+                    <label asp-for="BalanceDue" class="block text-sm font-medium text-gray-700"></label>
+                    <div class="mt-1">
+                        <input asp-for="BalanceDue" class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 bg-gray-100 text-gray-900 focus:outline-none sm:text-sm" readonly id="balanceDue" />
+                    </div>
+                </div>
+
+                <!-- Invoice Status (Readonly) -->
+                <div>
+                    <label asp-for="InvoiceStatus" class="block text-sm font-medium text-gray-700"></label>
+                    <div class="mt-1">
+                        <input asp-for="InvoiceStatus" class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 bg-gray-100 text-gray-900 focus:outline-none sm:text-sm" readonly id="invoiceStatusDisplay" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center justify-end space-x-4 mt-8">
+                <a asp-action="Index" class="group relative flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                    Back to List
+                </a>
+                <button type="submit" class="group relative flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            // Function to calculate and update BalanceDue, Status, and Card color
+            function updateInvoiceState() {
+                var totalAmount = parseFloat($('#TotalAmount').val()) || 0;
+                var amountPaid = parseFloat($('#amountPaidInput').val()) || 0;
+                var balanceDue = totalAmount - amountPaid;
+
+                // Update Balance Due display
+                $('#balanceDue').val(balanceDue.toFixed(2));
+
+                // Determine the new invoice status
+                var invoiceStatus = "Unpaid";
+                if (amountPaid >= totalAmount) {
+                    invoiceStatus = "Paid";
+                } else if (amountPaid > 0) {
+                    invoiceStatus = "PartiallyPaid";
+                }
+
+                // Update hidden input and display field
+                $('#invoiceStatusInput').val(invoiceStatus);
+                $('#invoiceStatusDisplay').val(invoiceStatus);
+
+                // Update card background color
+                var card = $('#invoiceCard');
+                card.removeClass('status-paid status-partially-paid status-unpaid');
+                card.addClass('status-' + invoiceStatus.toLowerCase());
+            }
+
+            // Initial call to update invoice state
+            updateInvoiceState();
+
+            // When Amount Paid input changes, update everything
+            $('#amountPaidInput').on('input', function() {
+                updateInvoiceState();
+            });
+        });
+    </script>
+}

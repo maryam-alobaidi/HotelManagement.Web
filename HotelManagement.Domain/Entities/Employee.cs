@@ -17,7 +17,7 @@ namespace HotelManagement.Domain.Entities
             Maintenance
         }
 
-        public int EmployeeID { get; private set; }
+        public int EmployeeID { get;  set; }
         public  string FirstName { get; set; }
         public  string LastName { get; set; }
         public  string Username { get; set; }

@@ -1,0 +1,105 @@
+﻿@model IEnumerable<HotelManagement.Web.Models.ViewModels.InvoiceModel.InvoiceViewModel>
+
+@{
+    ViewData["Title"] = "Invoices";
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<!-- Load Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f3f4f6;
+    }
+</style>
+
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-4xl font-extrabold text-gray-900">Invoices</h1>
+        <a asp-action="Create" class="inline-flex items-center px-6 py-3 border border-transparent rounded-full shadow-lg text-base font-medium text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 transition duration-300 ease-in-out transform hover:scale-105">
+            <svg class="-ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Create New
+        </a>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="bg-white rounded-2xl shadow-xl overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            @Html.DisplayNameFor(model => model.InvoiceID)
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            @Html.DisplayNameFor(model => model.BookingID)
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
+                            @Html.DisplayNameFor(model => model.InvoiceStatus)
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                            @Html.DisplayNameFor(model => model.InvoiceDate)
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            @Html.DisplayNameFor(model => model.TotalAmount)
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            @Html.DisplayNameFor(model => model.BalanceDue)
+                        </th>
+                        <th scope="col" class="relative px-6 py-3">
+                            <span class="sr-only">Actions</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                @Html.DisplayFor(modelItem => item.InvoiceID)
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                @Html.DisplayFor(modelItem => item.BookingID)
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden sm:table-cell">
+                                @Html.DisplayFor(modelItem => item.InvoiceStatus)
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
+                                @Html.DisplayFor(modelItem => item.InvoiceDate)
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                @Html.DisplayFor(modelItem => item.TotalAmount)
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm @(item.BalanceDue > 0 ? "text-red-500" : "text-green-500")">
+                                @Html.DisplayFor(modelItem => item.BalanceDue)
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <div class="flex items-center space-x-2">
+                                    <a asp-action="Details" asp-route-id="@item.InvoiceID" class="text-indigo-600 hover:text-indigo-900 font-medium">Details</a>
+                                    <a asp-action="Edit" asp-route-id="@item.InvoiceID" class="text-blue-600 hover:text-blue-900 font-medium">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.InvoiceID" class="text-red-600 hover:text-red-900 font-medium">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center p-12 bg-white rounded-2xl shadow-xl">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">No Invoices Found</h2>
+            <p class="text-gray-500">You can create a new invoice to get started.</p>
+        </div>
+    }
+</div>

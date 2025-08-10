@@ -59,7 +59,7 @@ namespace HotelManagement.Web.Controllers
 
             var employeeViewModel = new EmployeeViewModel
             {
-              //  EmployeeID = Employee.EmployeeID,
+              //  GeneratedByEmployeeID = Employee.GeneratedByEmployeeID,
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
                 Username = employee.Username,
@@ -107,7 +107,7 @@ namespace HotelManagement.Web.Controllers
                 );
 
                 await _employeeService.AddEmployeeAsync(employeeDomain);
-                _logger.LogInformation($"Create: Employee created successfully. EmployeeID: {employeeDomain.EmployeeID}, Username: {employeeDomain.Username}");
+                _logger.LogInformation($"Create: Employee created successfully. GeneratedByEmployeeID: {employeeDomain.EmployeeID}, Username: {employeeDomain.Username}");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -207,7 +207,7 @@ namespace HotelManagement.Web.Controllers
 
             var employeeViewModel = new EmployeeEditViewModel
             {
-               // EmployeeID = Employee.EmployeeID,
+               // GeneratedByEmployeeID = Employee.GeneratedByEmployeeID,
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
                 Username = employee.Username,

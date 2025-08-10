@@ -83,7 +83,7 @@ namespace HotelManagement.BLL.Services
                 }
 
                 // Example Rule 2: Update amountPaid and status
-                decimal newAmountPaid = existingInvoice.AmountPaid + amountPaid;
+                decimal? newAmountPaid = existingInvoice.AmountPaid + amountPaid;
                 InvoiceStatusEnum newStatus = existingInvoice.InvoiceStatus;
 
                 if (newAmountPaid >= existingInvoice.TotalAmount)
@@ -95,9 +95,9 @@ namespace HotelManagement.BLL.Services
                 {
                     newStatus = InvoiceStatusEnum.PartiallyPaid;
                 }
-                else // newAmountPaid is 0
+                else if (newAmountPaid == 0)
                 {
-                    newStatus = InvoiceStatusEnum.Overdue; // Or whatever your initial state is
+                    newStatus = InvoiceStatusEnum.Unpaid; // If no amount paid, revert to unpaid
                 }
 
 

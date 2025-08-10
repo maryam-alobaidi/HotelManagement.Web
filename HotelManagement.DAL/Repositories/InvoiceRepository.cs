@@ -172,7 +172,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
             }
             using (SqlCommand command = new SqlCommand("Sp_GetInvoicesByID"))
             {
-                command.Parameters.AddWithValue("@ID", id);
+                command.Parameters.AddWithValue("@InvoiceID", id);
                 command.CommandType = CommandType.StoredProcedure;
                 using (SqlDataReader reader = await PrimaryFunctions.GetAsync(command, _connectionString))
                 {

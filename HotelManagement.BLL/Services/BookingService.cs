@@ -63,6 +63,11 @@ namespace HotelManagement.BLL.Services
             return await _bookingRepository.GetByIdAsync(id);
         }
 
+        public async Task<IEnumerable<Booking>> GetBookingsWithAllDetails()
+        {
+            return await _bookingRepository.GetBookingsWithAllDetails();
+        }
+
         public async Task<bool> UpdateBookingAsync(Booking booking)
         {
             if (booking.BookingID <= 0)
