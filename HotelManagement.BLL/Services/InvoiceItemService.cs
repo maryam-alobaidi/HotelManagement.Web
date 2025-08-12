@@ -44,11 +44,7 @@ namespace HotelManagement.BLL.Services
 
             if (invoiceItem.InvoiceID <= 0)
                 throw new ArgumentException("Invoice ID must be a positive integer.", nameof(invoiceItem.InvoiceID));
-            if (invoiceItem.Invoice.TotalAmount < 0)
-                throw new ArgumentException("Total amount cannot be negative.", nameof(invoiceItem.Invoice.TotalAmount));
-
-           
-
+          
             try
             {
                 // 3. استدعاء طبقة المستودع لتنفيذ التحديث في قاعدة البيانات

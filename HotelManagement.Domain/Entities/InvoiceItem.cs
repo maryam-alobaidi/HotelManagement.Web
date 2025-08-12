@@ -1,43 +1,42 @@
 ﻿using HotelManagement.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace HotelManagement.Domain.Entities
 {
     public class InvoiceItem
     {
+        // Public setters are required for Entity Framework
+        public int InvoiceItemID { get; set; }
+        public int InvoiceID { get; set; }
+        public string ItemDescription { get; set; }
+        public int Quantity { get; set; }
+        public decimal UnitPrice { get; set; }
+        public InvoiceItemTypeEnum ItemType { get; set; }
+        public decimal LineTotal { get; set; }
 
-        public int InvoiceItemID { get;private set; }
-        public int InvoiceID { get; private set; }
-        public string ItemDescription { get; private set; }
-        public int Quantity { get; private set; }
-        public decimal UnitPrice { get; private set; }
-        public InvoiceItemTypeEnum ItemType { get; private set; }
-       
-        public decimal LineTotal { get;  set; }
         public Invoice? Invoice { get; set; }
 
-        //For creating a new invoice item
-        public InvoiceItem(int invoiceID, string itemDescription, int quantity, decimal unitPrice, decimal? lineTotal, InvoiceItemTypeEnum itemType)
+        // For creating a new invoice item
+        // NOTE: The constructor no longer takes 'lineTotal' as an argument.
+        public InvoiceItem(int invoiceID, string itemDescription, int quantity, decimal unitPrice, InvoiceItemTypeEnum itemType)
         {
-
-            if(invoiceID <= 0) throw new ArgumentException("Invoice ID must be greater than zero", nameof(invoiceID));
-            if(quantity < 0) throw new ArgumentException("Quantity can not be negative", nameof(quantity));
-            if(unitPrice < 0) throw new ArgumentException("Unit price can not be negative", nameof(unitPrice));
-
+            if (invoiceID <= 0) throw new ArgumentException("Invoice ID must be greater than zero", nameof(invoiceID));
+            if (quantity < 0) throw new ArgumentException("Quantity can not be negative", nameof(quantity));
+            if (unitPrice < 0) throw new ArgumentException("Unit price can not be negative", nameof(unitPrice));
+            if (string.IsNullOrWhiteSpace(itemDescription)) throw new ArgumentNullException(nameof(itemDescription));
 
             InvoiceID = invoiceID;
-            ItemDescription = itemDescription.Trim()?? throw new ArgumentNullException(nameof(itemDescription));
+            ItemDescription = itemDescription.Trim();
             Quantity = quantity;
             UnitPrice = unitPrice;
             ItemType = itemType;
+
+            // The LineTotal is calculated automatically upon creation
+           // CalculateLineTotal();
         }
 
-        //For retrieving an existing invoice item   
-        public InvoiceItem(int invoiceItemID, int invoiceID, string itemDescription, int quantity, decimal unitPrice,decimal lineTotal, InvoiceItemTypeEnum itemType)
+        // For retrieving an existing invoice item
+        public InvoiceItem(int invoiceItemID, int invoiceID, string itemDescription, int quantity, decimal unitPrice, decimal lineTotal, InvoiceItemTypeEnum itemType)
         {
             InvoiceItemID = invoiceItemID;
             InvoiceID = invoiceID;
@@ -48,26 +47,23 @@ namespace HotelManagement.Domain.Entities
             ItemType = itemType;
         }
 
-        private InvoiceItem()
+        public InvoiceItem()
         {
         }
 
-
         public void ChangeQuantity(int newQuantity)
         {
-
-            if(newQuantity < 0) throw new ArgumentException("Quentity can not be negative",nameof(newQuantity));
-
+            if (newQuantity < 0) throw new ArgumentException("Quantity can not be negative", nameof(newQuantity));
             Quantity = newQuantity;
+            CalculateLineTotal(); // Recalculate total after change
         }
 
         public void ChangeUnitPrice(decimal newPrice)
         {
             if (newPrice <= 0) throw new ArgumentException("New price can not be negative or Zero.", nameof(newPrice));
-
             UnitPrice = newPrice;
+            CalculateLineTotal(); // Recalculate total after change
         }
-
 
         public void ChangeItemDescription(string newDescription)
         {
@@ -80,13 +76,14 @@ namespace HotelManagement.Domain.Entities
             ItemType = newItemType;
         }
 
-        public decimal CalculateLineTotal()
+        // This method is now private because it's an internal function
+        // that the class uses to maintain its own state.
+        private void CalculateLineTotal()
         {
+            // You can add validation here for extra safety
             if (Quantity < 0) throw new ArgumentException("Quantity can not be negative", nameof(Quantity));
             if (UnitPrice < 0) throw new ArgumentException("Unit price can not be negative", nameof(UnitPrice));
-         this.LineTotal = Quantity * UnitPrice;
-            return LineTotal;
+            this.LineTotal = Quantity * UnitPrice;
         }
-
     }
 }

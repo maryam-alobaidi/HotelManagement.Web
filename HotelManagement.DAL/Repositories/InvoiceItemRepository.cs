@@ -107,7 +107,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 quantity: reader.GetInt32(reader.GetOrdinal(nameof(InvoiceItem.Quantity))),
                 unitPrice: reader.GetDecimal(reader.GetOrdinal(nameof(InvoiceItem.UnitPrice))),
                 lineTotal: reader.GetDecimal(reader.GetOrdinal(nameof(InvoiceItem.LineTotal))),
-                itemType: (InvoiceItemTypeEnum)reader.GetInt32(reader.GetOrdinal(nameof(InvoiceItem.ItemDescription)))
+                itemType: (InvoiceItemTypeEnum)reader.GetInt32(reader.GetOrdinal(nameof(InvoiceItem.ItemType)))
             );
         }
 
