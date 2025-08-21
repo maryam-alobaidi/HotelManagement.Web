@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace HotelManagement.Domain.Entities
 {
     public class PaymentMethod
@@ -12,23 +7,26 @@ namespace HotelManagement.Domain.Entities
         public int MethodID { get; set; }
         public  string MethodName { get; set; }
         public string? Description { get; set; }
+        public bool IsActive { get; set; }
 
         //For adding a new payment method
-        public PaymentMethod(string methodName, string? description)
+        public PaymentMethod(string methodName, string? description, bool isActive)
         {
             MethodName = methodName ?? throw new ArgumentNullException(nameof(methodName));
             Description = description?.Trim();
+            IsActive = isActive;
         }
 
         //For retrieving from the database
-        public PaymentMethod(int methodID, string methodName, string? description)
+        public PaymentMethod(int methodID, string methodName, string? description, bool isActive)
         {
             MethodID = methodID;
             MethodName = methodName;
             Description = description;
+            IsActive = isActive;
         }
 
-        private PaymentMethod()
+        public PaymentMethod()
         {
         }
     }

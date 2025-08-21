@@ -1,0 +1,61 @@
+﻿@model HotelManagement.Web.Models.ViewModels.PaymentMethodModel.PaymentMethodViewModel
+
+@{
+    ViewData["Title"] = "Delete Payment Method";
+}
+
+<div class="container my-5 p-4 bg-light rounded shadow">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <h1 class="h3 text-danger fw-bold">
+            <i class="fas fa-trash-alt me-2"></i> Delete Payment Method
+        </h1>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to List
+        </a>
+    </div>
+
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        Are you sure you want to delete this payment method?
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3 fw-bold">Method ID</dt>
+                <dd class="col-sm-9">#@Model.MethodID</dd>
+
+                <dt class="col-sm-3 fw-bold">Method Name</dt>
+                <dd class="col-sm-9">@Model.MethodName</dd>
+
+                <dt class="col-sm-3 fw-bold">Description</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
+
+                <dt class="col-sm-3 fw-bold">Active</dt>
+                <dd class="col-sm-9">
+                    @if (Model.IsActive)
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Inactive</span>
+                    }
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <form asp-action="Delete" method="post">
+        @Html.HiddenFor(m => m.MethodID)
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash me-1"></i> Confirm Delete
+            </button>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-times me-1"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>

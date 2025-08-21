@@ -1,4 +1,5 @@
 ﻿using HotelManagement.Domain.Entities;
+using HotelManagement.Infrastructure.DAL.DTOs;
 
 namespace HotelManagement.Infrastructure.DAL.Interfaces
 {
@@ -10,5 +11,9 @@ namespace HotelManagement.Infrastructure.DAL.Interfaces
         Task<IEnumerable<Payment>> GetAllAsync();
         Task<Payment?> GetByIdAsync(int id);
         Task<decimal> GetTotalPaidForBookingAsync(int bookingId);
+        Task<IEnumerable<PaymentDetailsDTO>> GetPaymentDetailsDTOsAsync();
+        Task<PaymentDetailsDTO?> GetPaymentDetailsByIdAsync(int id);
+
+
     }
 }

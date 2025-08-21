@@ -1,7 +1,9 @@
 ﻿using HotelManagement.BLL.Interfaces;
 using HotelManagement.DAL.Interfaces;
 using HotelManagement.Domain.Entities;
+using HotelManagement.Infrastructure.DAL.DTOs;
 using HotelManagement.Infrastructure.DAL.Interfaces;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 namespace HotelManagement.BLL.Services
@@ -110,6 +112,11 @@ namespace HotelManagement.BLL.Services
            return await _bookingRepository.UpdateAsync(existingBooking);
         }
 
-     
+        public async Task<IEnumerable<UnpaidBookingDto>> GetUnpaidBookingsAsync()
+        {
+           
+            return await _bookingRepository.GetUnpaidBookingsAsync();
+        }
+
     }
 }

@@ -187,5 +187,72 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 }
             }
         }
+
+        public async Task<IEnumerable<Invoice?>> GetInvoicesByBookingIdAsync(int bookingId)
+        {
+            List<Invoice> invoices = new List<Invoice>();
+
+            using (SqlCommand command = new SqlCommand("Sp_GetInvoicesByBookingId"))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@BookingID", bookingId);
+                using (SqlDataReader reader = await PrimaryFunctions.GetAsync(command, _connectionString))
+                {
+                    if (await reader.ReadAsync())
+                    {
+                        invoices.Add(MapToAllIDetailsnvoice(reader));
+                    }
+                  
+                }
+                if (invoices.Count == 0)
+                {
+                    return null; 
+                }
+                else
+                {
+                   
+                    return invoices;
+                }
+              
+            }
+        }
+
+        private Invoice MapToAllIDetailsnvoice(SqlDataReader reader)
+        {
+            return new Invoice(
+                invoiceID: reader.GetInt32(reader.GetOrdinal(nameof(Invoice.InvoiceID))),
+                bookingID: reader.GetInt32(reader.GetOrdinal(nameof(Invoice.BookingID))),
+                customerID: reader.GetInt32(reader.GetOrdinal(nameof(Invoice.CustomerID))),
+                invoiceDate: reader.GetDateTime(reader.GetOrdinal(nameof(Invoice.InvoiceDate))),
+                totalAmount: reader.GetDecimal(reader.GetOrdinal(nameof(Invoice.TotalAmount))),
+                amountPaid: reader.GetDecimal(reader.GetOrdinal(nameof(Invoice.AmountPaid))),
+                balanceDue: reader.IsDBNull(reader.GetOrdinal(nameof(Invoice.BalanceDue))) ? 0 : reader.GetDecimal(reader.GetOrdinal(nameof(Invoice.BalanceDue))),
+                invoiceStatus: (InvoiceStatusEnum)reader.GetInt32(reader.GetOrdinal(nameof(Invoice.InvoiceStatus))),// تحويل int إلى Enum
+                generatedByEmployeeID: reader.GetInt32(reader.GetOrdinal(nameof(Invoice.GeneratedByEmployeeID)))
+                );
+        }
+
+        public async Task<int?> GetBookingIdByInvoiceIdAsync(int invoiceId)
+        {
+            if (invoiceId <= 0)
+            {
+                throw new ArgumentException("Invoice Id must be greater than zero.", nameof(invoiceId));
+            }
+            using (SqlCommand command = new SqlCommand("Sp_GetBookingIdByInvoiceId"))
+            {
+                command.Parameters.AddWithValue("@InvoiceId", invoiceId);
+                command.CommandType = CommandType.StoredProcedure;
+                int? bookingID = await PrimaryFunctions.GetBookingIDAsync(command, _connectionString);
+               
+                if( bookingID.HasValue && bookingID.Value > 0)
+                {
+                    return bookingID;
+                }
+                else
+                {
+                    return null; // Return null if no valid BookingID is found
+                }
+            }
+        }
     }
 }

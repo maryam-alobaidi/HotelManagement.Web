@@ -1,4 +1,5 @@
 ﻿using HotelManagement.Domain.Entities;
+using HotelManagement.Infrastructure.DAL.DTOs;
 
 namespace HotelManagement.BLL.Interfaces
 {
@@ -11,6 +12,9 @@ namespace HotelManagement.BLL.Interfaces
         Task<bool> DeleteBookingAsync(int id);
 
         Task<IEnumerable<Booking>> GetBookingsWithAllDetails();
+
+        Task<IEnumerable<UnpaidBookingDto>> GetUnpaidBookingsAsync();
+
 
     }
 }

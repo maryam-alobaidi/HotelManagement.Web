@@ -1,6 +1,8 @@
 ﻿
 
 
+using HotelManagement.Domain.Enums;
+
 namespace HotelManagement.Domain.Entities
 {
     public class Payment
@@ -67,9 +69,13 @@ namespace HotelManagement.Domain.Entities
             PaymentMethodID = paymentMethodID;
             TransactionReference = string.IsNullOrEmpty(transactionReference) ? null : transactionReference.Trim();
             RecordedByEmployeeID = recordedByEmployeeID;
+       
         }
 
-        private Payment()
+
+
+      
+        public Payment()
         {
         }
     }

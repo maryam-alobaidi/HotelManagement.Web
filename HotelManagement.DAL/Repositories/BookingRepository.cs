@@ -1,5 +1,6 @@
 ﻿using HotelManagement.Domain.Entities;
 using HotelManagement.Domain.Enums;
+using HotelManagement.Infrastructure.DAL.DTOs;
 using HotelManagement.Infrastructure.DAL.Interfaces;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
@@ -277,5 +278,40 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
 
             return booking;
         }
+
+
+        //here is the problem 
+        public async Task<IEnumerable<UnpaidBookingDto>> GetUnpaidBookingsAsync()
+        {
+            List<UnpaidBookingDto> bookings = new List<UnpaidBookingDto>();
+            using (SqlCommand command = new SqlCommand("SP_GetUnpaidBookings"))
+            {
+
+                command.CommandType = CommandType.StoredProcedure;
+                SqlDataReader reader = await PrimaryFunctions.GetAsync(command, _connectionString);
+                while (reader.Read())
+                {
+                    bookings.Add(MapToUpdateBooking(reader));
+                }
+
+            }
+            return bookings;
+
+        }
+        private UnpaidBookingDto MapToUpdateBooking(SqlDataReader reader)
+        {
+         
+            return new UnpaidBookingDto
+            {
+                BookingID = reader.GetFieldValue<int>("BookingID"),
+                CustomerID= reader.GetFieldValue<int>("CustomerID"),
+                FullName = reader.GetFieldValue<string>("FullName"),
+                RoomNumber = reader.GetFieldValue<string>("RoomNumber"),
+                CheckInDate = reader.GetFieldValue<DateTime>("CheckInDate"),
+                InvoiceID = reader.GetFieldValue<int>("InvoiceID")
+            };
+        }
+
+      
     }
-    }
+}

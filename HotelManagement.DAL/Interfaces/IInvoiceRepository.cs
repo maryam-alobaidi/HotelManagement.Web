@@ -13,6 +13,8 @@ namespace HotelManagement.Infrastructure.DAL.Interfaces
         Task<Invoice?> GetByIdAsync(int id);
         Task<IEnumerable<Invoice>> GetInvoicesByCustomerIdAsync(int customerId);
         Task<decimal?> CalculateInvoiceTotalAsync(int invoiceId);
-       
+        Task<IEnumerable<Invoice?>> GetInvoicesByBookingIdAsync(int bookingId);
+
+        Task<int?> GetBookingIdByInvoiceIdAsync(int invoiceId);
     }
 }

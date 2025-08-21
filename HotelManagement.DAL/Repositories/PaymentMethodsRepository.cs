@@ -22,6 +22,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@MethodName", paymentMethod.MethodName);
                 command.Parameters.AddWithValue("@Description", paymentMethod.Description ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@IsActive", paymentMethod.IsActive);
                
                 command.Parameters.AddWithValue("@MethodID", SqlDbType.Int).Direction = ParameterDirection.Output;
 
@@ -60,7 +61,9 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
             (
                 methodID: reader.GetInt32(reader.GetOrdinal(nameof(PaymentMethod.MethodID))),
                 methodName: reader.GetString(reader.GetOrdinal(nameof(PaymentMethod.MethodName))),
-                description: reader.IsDBNull(reader.GetOrdinal(nameof(PaymentMethod.Description))) ? null : reader.GetString(reader.GetOrdinal(nameof(PaymentMethod.Description)))
+                description: reader.IsDBNull(reader.GetOrdinal(nameof(PaymentMethod.Description))) ? null : reader.GetString(reader.GetOrdinal(nameof(PaymentMethod.Description))),
+                isActive:reader.GetBoolean(reader.GetOrdinal(nameof(PaymentMethod.IsActive)))
+
             );
         }
 
@@ -96,6 +99,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 command.Parameters.AddWithValue("@MethodID", paymentMethod.MethodID);
                 command.Parameters.AddWithValue("@MethodName", paymentMethod.MethodName);
                 command.Parameters.AddWithValue("@Description", (object) paymentMethod.Description ?? DBNull.Value);
+                command.Parameters.AddWithValue("@IsActive", paymentMethod.IsActive);
 
                 try
                 {

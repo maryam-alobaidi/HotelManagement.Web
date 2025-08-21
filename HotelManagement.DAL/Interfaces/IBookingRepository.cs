@@ -1,4 +1,5 @@
 ﻿using HotelManagement.Domain.Entities;
+using HotelManagement.Infrastructure.DAL.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,8 @@ namespace HotelManagement.Infrastructure.DAL.Interfaces
         Task<Booking?> GetByIdAsync(int id);
         Task<bool> IsRoomAvailable(int roomID,DateTime checkInDate,DateTime checkOutDate,int? bookingIdToExclude=null);
         Task<IEnumerable<Booking>> GetBookingsWithAllDetails();
+
+        Task<IEnumerable<UnpaidBookingDto>> GetUnpaidBookingsAsync();
+       
     }
 }

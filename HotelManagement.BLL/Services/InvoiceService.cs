@@ -3,6 +3,7 @@ using HotelManagement.BLL.Interfaces;
 using HotelManagement.Domain.Entities;
 using HotelManagement.Domain.Enums;
 using HotelManagement.Infrastructure.DAL.Interfaces;
+using HotelManagement.Infrastructure.DAL.Repositories;
 using Microsoft.Data.SqlClient;
 
 namespace HotelManagement.BLL.Services
@@ -45,6 +46,12 @@ namespace HotelManagement.BLL.Services
         {
           if(invoiceId <= 0) throw new ArgumentException("Invoice ID must be a positive integer.", nameof(invoiceId));
             return await _invoiceRepository.GetByIdAsync(invoiceId);
+        }
+
+        public async Task<IEnumerable< Invoice?>> GetInvoicesBybookingIdAsync(int bookingId)
+        {
+            if(bookingId <= 0) throw new ArgumentException("Booking ID must be a positive integer.", nameof(bookingId));
+            return  await _invoiceRepository.GetInvoicesByBookingIdAsync(bookingId);
         }
 
         public async Task<IEnumerable<Invoice>> GetInvoicesByCustomerIdAsync(int customerId)
@@ -169,5 +176,13 @@ namespace HotelManagement.BLL.Services
                 throw new ApplicationException($"An error occurred while trying to update invoice ID {invoice.InvoiceID}.", ex);
             }
         }
+
+
+        public async Task<int?> GetBookingIdByInvoiceIdAsync(int invoiceId)
+        {
+            return await _invoiceRepository.GetBookingIdByInvoiceIdAsync(invoiceId);
+        }
+
+       
     }
 }

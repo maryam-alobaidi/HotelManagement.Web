@@ -1,0 +1,71 @@
+﻿@model IEnumerable<HotelManagement.Web.Models.ViewModels.PaymentMethodModel.PaymentMethodViewModel>
+
+@{
+    ViewData["Title"] = "Payment Methods";
+}
+
+<div class="container my-5 p-4 bg-light rounded shadow">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <h1 class="h2 text-primary fw-bold">Payment Methods</h1>
+        <a asp-action="Create" class="btn btn-success">
+            <i class="fas fa-plus-circle me-1"></i> Create New
+        </a>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="text-center p-5 bg-white rounded shadow-sm">
+            <h2 class="h4 text-muted">No payment methods found.</h2>
+            <p class="text-secondary">Get started by creating a new payment method.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive bg-white rounded shadow-sm">
+            <table class="table table-striped table-hover">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Method ID</th>
+                        <th>Method Name</th>
+                        <th class="d-none d-md-table-cell">Description</th>
+                        <th class="text-center">Active</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>#@item.MethodID</td>
+                            <td>@item.MethodName</td>
+                            <td class="d-none d-md-table-cell">@Html.DisplayFor(modelItem => item.Description)</td>
+                            <td class="text-center">
+                                @if (item.IsActive)
+                                {
+                                    <span class="text-success fw-bold">✔ Active</span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger fw-bold">✖ Inactive</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Edit" asp-route-id="@item.MethodID" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.MethodID" class="btn btn-info btn-sm text-white">
+                                        <i class="fas fa-info-circle"></i> Details
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.MethodID" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

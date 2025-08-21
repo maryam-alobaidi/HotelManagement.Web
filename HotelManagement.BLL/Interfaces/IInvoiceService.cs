@@ -16,6 +16,11 @@ namespace HotelManagement.BLL.Interfaces
         Task<decimal?> CalculateInvoiceTotalAsync(int invoiceId);
         Task<bool> MarkInvoiceAsPaidAsync(int invoiceId, decimal amountPaid);
 
+        Task<IEnumerable<Invoice?>> GetInvoicesBybookingIdAsync(int bookingId);
+
+
+        Task<int?> GetBookingIdByInvoiceIdAsync(int invoiceId);
+
 
         ///// <summary>
         ///// Generates an invoice for a given reservation.
@@ -23,7 +28,7 @@ namespace HotelManagement.BLL.Interfaces
         ///// <param name="reservationId">The ID of the reservation.</param>
         ///// <returns>A string representing the generated invoice.</returns>
         //string GenerateInvoice(int reservationId);
-       
+
 
         ///// <summary>
         ///// Sends the invoice to the customer via email.

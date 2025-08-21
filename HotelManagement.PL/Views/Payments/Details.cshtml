@@ -1,0 +1,117 @@
+﻿@model HotelManagement.Web.Models.ViewModels.PaymentModel.PaymentDetailsByIdViewModel
+
+@{
+    ViewData["Title"] = "Payment Details";
+}
+
+<!-- Use a CDN for Tailwind CSS to simplify styling -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+        <!-- Header -->
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">
+            Payment Details
+        </h1>
+
+        <!-- Details Grid/List -->
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-sm md:text-base text-gray-700">
+            <!-- Payment ID -->
+            <div class="col-span-1">
+                <dt class="font-semibold text-gray-500">
+                    @Html.DisplayNameFor(model => model.PaymentID)
+                </dt>
+                <dd class="mt-1 font-medium text-gray-900">
+                    @Html.DisplayFor(model => model.PaymentID)
+                </dd>
+            </div>
+
+            <!-- Invoice ID -->
+            <div class="col-span-1">
+                <dt class="font-semibold text-gray-500">
+                    @Html.DisplayNameFor(model => model.InvoiceID)
+                </dt>
+                <dd class="mt-1 font-medium text-gray-900">
+                    @Html.DisplayFor(model => model.InvoiceID)
+                </dd>
+            </div>
+
+            <!-- Amount -->
+            <div class="col-span-1">
+                <dt class="font-semibold text-gray-500">
+                    @Html.DisplayNameFor(model => model.Amount)
+                </dt>
+                <dd class="mt-1 font-medium text-gray-900">
+                    @Html.DisplayFor(model => model.Amount)
+                </dd>
+            </div>
+
+            <!-- Payment Date -->
+            <div class="col-span-1">
+                <dt class="font-semibold text-gray-500">
+                    @Html.DisplayNameFor(model => model.PaymentDate)
+                </dt>
+                <dd class="mt-1 font-medium text-gray-900">
+                    @Html.DisplayFor(model => model.PaymentDate)
+                </dd>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="col-span-1">
+                <dt class="font-semibold text-gray-500">
+                    @Html.DisplayNameFor(model => model.PaymentMethodName)
+                </dt>
+                <dd class="mt-1 font-medium text-gray-900">
+                    @Html.DisplayFor(model => model.PaymentMethodName)
+                </dd>
+            </div>
+
+            <!-- Transaction Reference -->
+            <div class="col-span-1">
+                <dt class="font-semibold text-gray-500">
+                    @Html.DisplayNameFor(model => model.TransactionReference)
+                </dt>
+                <dd class="mt-1 font-medium text-gray-900">
+                    @Html.DisplayFor(model => model.TransactionReference)
+                </dd>
+            </div>
+
+            <!-- Recorded by Employee ID -->
+            <div class="col-span-1">
+                <dt class="font-semibold text-gray-500">
+                    @Html.DisplayNameFor(model => model.RecordedByEmployeeID)
+                </dt>
+                <dd class="mt-1 font-medium text-gray-900">
+                    @Html.DisplayFor(model => model.RecordedByEmployeeID)
+                </dd>
+            </div>
+
+            <!-- Employee Name -->
+            <div class="col-span-1">
+                <dt class="font-semibold text-gray-500">
+                    @Html.DisplayNameFor(model => model.EmployeeName)
+                </dt>
+                <dd class="mt-1 font-medium text-gray-900">
+                    @Html.DisplayFor(model => model.EmployeeName)
+                </dd>
+            </div>
+
+            <!-- Invoice Status -->
+            <div class="col-span-1">
+                <dt class="font-semibold text-gray-500">
+                    @Html.DisplayNameFor(model => model.InvoiceStatus)
+                </dt>
+                <dd class="mt-1 font-medium text-gray-900">
+                    @Html.DisplayFor(model => model.InvoiceStatus)
+                </dd>
+            </div>
+        </dl>
+
+        <!-- Back to List Link -->
+        <div class="mt-8 pt-4 border-t text-center">
+            <a href="@Url.Action("Index", "Payments")" class="text-blue-600 hover:text-blue-800 transition-colors duration-200 font-medium">
+                &larr; Back to List
+            </a>
+        </div>
+    </div>
+</div>

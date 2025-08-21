@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using HotelManagement.Domain.Entities;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 
@@ -178,7 +179,7 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 {
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
-                    SqlParameter outputParam = command.Parameters["@TotalPaidAmount"] as SqlParameter; // الحصول على المعامل بواسطة اسمه
+                    SqlParameter outputParam = command.Parameters["@TotalPaidAmount"] as SqlParameter; 
                     if (outputParam != null && outputParam.Value != DBNull.Value)
                     {
                         TotalPaid = Convert.ToDecimal(outputParam.Value);
@@ -192,7 +193,6 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 return TotalPaid;
             }
         }
-
 
         public static async Task<decimal?> CalculateInvoiceTotalAsync(SqlCommand command, string ConnectionString)
         {
@@ -219,5 +219,39 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 return TotalInvoice;
             }
         }
+
+        public static async Task<int?> GetBookingIDAsync(SqlCommand command, string connectionString)
+        {
+            int? ID = null;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                command.Connection = connection;
+
+                try
+                {
+                    await connection.OpenAsync();
+
+                    object? result = await command.ExecuteScalarAsync();
+
+                    if (result != null && result != DBNull.Value)
+                    {
+                        // Convert the result to an integer and return it.
+                        ID= Convert.ToInt32(result);
+                    }
+                    else
+                    {
+                        ID= null;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    
+                    throw;
+                }
+              return ID;
+            }
+        }
     }
+    
 }
