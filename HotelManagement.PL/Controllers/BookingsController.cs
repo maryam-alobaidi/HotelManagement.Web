@@ -3,6 +3,7 @@ using HotelManagement.BLL.Services;
 using HotelManagement.Domain.Entities;
 using HotelManagement.Domain.Enums;
 using HotelManagement.Web.Models.ViewModels.BookingModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,9 +12,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace HotelManagement.Web.Controllers
 {
 
-
-
-
+   
     public class BookingsController:Controller
     {
         private readonly IBookingService _bookingService;

@@ -1,0 +1,120 @@
+﻿@{
+    ViewData["Title"] = "About Us";
+}
+
+<style>
+    .about-hero {
+        background: url('/images/hotel-about-hero.jpg') no-repeat center center;
+        background-size: cover;
+        color: white;
+        padding: 120px 0;
+        text-align: center;
+        position: relative;
+    }
+
+        .about-hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .about-hero h1, .about-hero p {
+            position: relative;
+            z-index: 2;
+        }
+
+    .feature-icon {
+        font-size: 3rem;
+        color: #007bff;
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="about-hero">
+    <div class="container">
+        <h1 class="display-4 fw-bold">About Our Hotel</h1>
+        <p class="lead">Luxury, comfort, and unforgettable experiences since 1995</p>
+    </div>
+</section>
+
+<!-- About Info -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <img src="/images/hotel-lobby.jpg" alt="Hotel Lobby" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-md-6">
+                <h2 class="mb-4">Who We Are</h2>
+                <p class="lead">
+                    Our hotel is more than just a place to stay — it is an experience.
+                    From the moment you walk into our elegant lobby, you will be welcomed with warmth and hospitality.
+                </p>
+                <p>
+                    With over 25 years of excellence in hospitality, we combine traditional elegance with modern comfort.
+                    Whether you're here for business, relaxation, or adventure, we promise to make your stay truly special.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+    <div class="container text-center">
+        <h2 class="mb-5">Why Choose Us</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <i class="fas fa-star feature-icon mb-3"></i>
+                <h5>Luxury Experience</h5>
+                <p>Enjoy 5-star service and world-class facilities tailored to your needs.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="fas fa-map-marker-alt feature-icon mb-3"></i>
+                <h5>Prime Location</h5>
+                <p>Located in the heart of the city, close to attractions, shopping, and culture.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="fas fa-heart feature-icon mb-3"></i>
+                <h5>Unmatched Hospitality</h5>
+                <p>Our staff is dedicated to making every moment of your stay unforgettable.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="py-5">
+    <div class="container text-center">
+        <h2 class="mb-5">Meet Our Team</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <img src="/images/team1.jpg" class="rounded-circle mb-3 shadow" width="150" height="150" alt="Manager">
+                <h6>Sarah Johnson</h6>
+                <p class="text-muted">General Manager</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <img src="/images/team2.jpg" class="rounded-circle mb-3 shadow" width="150" height="150" alt="Chef">
+                <h6>Antonio Rossi</h6>
+                <p class="text-muted">Head Chef</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <img src="/images/team3.jpg" class="rounded-circle mb-3 shadow" width="150" height="150" alt="Concierge">
+                <h6>Ahmed Ali</h6>
+                <p class="text-muted">Chief Concierge</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Back to Home -->
+<section class="py-5 bg-light text-center">
+    <div class="container">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg rounded-pill shadow">
+            ← Back to Home
+        </a>
+    </div>
+</section>

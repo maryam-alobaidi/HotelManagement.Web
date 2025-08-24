@@ -1,12 +1,14 @@
 ﻿using HotelManagement.BLL.Interfaces;
 using HotelManagement.Domain.Entities;
 using HotelManagement.Web.Models.ViewModels.EmployeeModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
 
 namespace HotelManagement.Web.Controllers
 {
+   
     public class EmployeesController : Controller
     {
         private readonly IEmployeeService _employeeService;

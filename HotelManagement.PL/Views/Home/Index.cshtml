@@ -1,21 +1,35 @@
 ﻿@{
-    ViewData["Title"] = "Welcome to Our Luxury Hotel"; // Page title for the browser tab
+    ViewData["Title"] = "Welcome to Our Luxury Hotel";
 }
 
+<!-- Custom Styles -->
 <style>
-    /* Custom styles for this page */
+    /* Navbar */
+    .navbar {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+
+        .navbar .nav-link {
+            color: white !important;
+            font-weight: 500;
+            margin-left: 15px;
+        }
+
+            .navbar .nav-link:hover {
+                color: #f8d210 !important;
+            }
+
+    /* Hero section */
     .hero-section {
-        background: url('/images/hotel-hero-background.jpg') no-repeat center center; /* Replace with your actual image path */
+        background: url('/images/hotel-hero-background.jpg') no-repeat center center;
         background-size: cover;
         color: white;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Text shadow for better readability */
-        padding: 100px 0;
-        min-height: 600px; /* Minimum height for the hero section */
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
         text-align: center;
-        position: relative;
+        min-height: 100vh;
     }
 
     .hero-overlay {
@@ -24,8 +38,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.4); /* Transparent overlay to make text readable */
-        z-index: 1;
+        background: rgba(0, 0, 0, 0.6);
     }
 
     .hero-content {
@@ -33,38 +46,94 @@
         z-index: 2;
     }
 
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #f8d210;
+        }
+
+    /* Section titles */
     .section-title {
         font-size: 2.5rem;
-        font-weight: 700;
-        color: #333;
-        margin-bottom: 30px;
+        font-weight: bold;
+        margin-bottom: 40px;
         text-align: center;
+        color: #333;
     }
 
+    /* About */
+    .about-img {
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    /* Service cards */
     .card-custom {
         border: none;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease-in-out;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transition: all 0.3s ease-in-out;
+        background: white;
     }
 
         .card-custom:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
         }
 
     .icon-large {
         font-size: 3rem;
-        color: #007bff; /* Icon color */
-        margin-bottom: 15px;
+        color: #0d6efd;
+    }
+
+    /* Gallery */
+    .gallery img {
+        border-radius: 12px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+
+    /* Call to Action */
+    .cta-section {
+        background: linear-gradient(to right, #0d6efd, #6610f2);
+        color: white;
+        padding: 70px 0;
+        text-align: center;
     }
 </style>
 
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand text-white fw-bold" href="#">Luxury Hotel</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon bg-light"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+                <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Contact" asp-action="Index">Contact</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
 <section class="hero-section">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-        <h1 class="display-3 fw-bold mb-4">Welcome to Our Luxury Hotel</h1>
-        <p class="lead mb-5">Enjoy an unforgettable stay in the heart of the city, where luxury meets comfort.</p>
-        <a asp-controller="Rooms" asp-action="Index" class="btn btn-primary btn-lg me-3">
-            <i class="fas fa-bed"></i> Book Your Room Now
+        <h1>Welcome to Our Luxury Hotel</h1>
+        <p class="lead mb-4">Where elegance meets comfort in the heart of the city.</p>
+        <a asp-controller="Rooms" asp-action="Index" class="btn btn-warning btn-lg me-3">
+            <i class="fas fa-bed"></i> Book Now
         </a>
         <a asp-controller="Contact" asp-action="Index" class="btn btn-outline-light btn-lg">
             <i class="fas fa-phone-alt"></i> Contact Us
@@ -72,50 +141,79 @@
     </div>
 </section>
 
-<section class="py-5 bg-light">
+<!-- About Section -->
+<section id="about" class="py-5 bg-light">
     <div class="container">
         <h2 class="section-title">About Our Hotel</h2>
         <div class="row align-items-center">
             <div class="col-md-6">
-                <img src="/images/hotel-lobby.jpg" class="img-fluid rounded shadow-sm mb-3" alt="Hotel Lobby">
+                <img src="/images/hotel-lobby.jpg" class="img-fluid about-img" alt="Hotel Lobby">
             </div>
             <div class="col-md-6">
                 <p class="lead">
-                    Our hotel is ideally located, offering an unparalleled luxury accommodation experience. With our elegant rooms, modern facilities, and exceptional service, we guarantee you a comfortable and enjoyable stay.
+                    Nestled in the heart of the city, our luxury hotel offers an unforgettable stay.
+                    Elegant rooms, world-class facilities, and unmatched hospitality await you.
                 </p>
                 <p>
-                    We are committed to providing the highest standards of hospitality, with a well-trained staff ready to meet all your needs around the clock.
+                    Whether for business or leisure, our staff is ready 24/7 to make your stay truly special.
                 </p>
-                <a asp-controller="About" asp-action="Index" class="btn btn-info">Learn More</a>
+                <a asp-controller="About" asp-action="Index" class="btn btn-primary">Learn More</a>
             </div>
         </div>
     </div>
 </section>
 
-<section class="py-5">
+<!-- Services Section -->
+<section id="services" class="py-5">
     <div class="container">
         <h2 class="section-title">Our Distinctive Services</h2>
-        <div class="row text-center">
-            <div class="col-md-4 mb-4">
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
                 <div class="card card-custom h-100 p-4">
-                    <div class="card-body">
-                        <i class="fas fa-wifi icon-large mb-3"></i>
-                        <h5 class="card-title">High-Speed Internet</h5>
-                        <p class="card-text">Stay connected with complimentary Wi-Fi throughout the hotel.</p>
-                    </div>
+                    <i class="fas fa-wifi icon-large mb-3"></i>
+                    <h5 class="card-title">High-Speed Internet</h5>
+                    <p class="card-text">Enjoy free high-speed Wi-Fi across the entire hotel.</p>
                 </div>
             </div>
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4">
                 <div class="card card-custom h-100 p-4">
-                    <div class="card-body">
-                        <i class="fas fa-utensils icon-large mb-3"></i>
-                        <h5 class="card-title">Luxury Restaurants</h5>
-                        <p class="card-text">Enjoy a unique dining experience in our restaurants offering the most delicious dishes.</p>
-                    </div>
+                    <i class="fas fa-utensils icon-large mb-3"></i>
+                    <h5 class="card-title">Fine Dining</h5>
+                    <p class="card-text">Savor delicious dishes prepared by world-class chefs.</p>
                 </div>
             </div>
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4">
                 <div class="card card-custom h-100 p-4">
-                    <div class="card-body">
-                        <i class="fas fa-swimming-pool icon-large mb-3"></i>
-                        <h5 class=" card-
+                    <i class="fas fa-spa icon-large mb-3"></i>
+                    <h5 class="card-title">Spa & Wellness</h5>
+                    <p class="card-text">Relax and rejuvenate in our luxury spa and wellness center.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Section -->
+<section id="gallery" class="py-5 bg-light">
+    <div class="container">
+        <h2 class="section-title">Our Gallery</h2>
+        <div class="row g-3 gallery">
+            <div class="col-md-4"><img src="/images/room1.jpg" class="img-fluid" alt="Room"></div>
+            <div class="col-md-4"><img src="/images/pool.jpg" class="img-fluid" alt="Pool"></div>
+            <div class="col-md-4"><img src="/images/restaurant.jpg" class="img-fluid" alt="Restaurant"></div>
+            <div class="col-md-4"><img src="/images/spa.jpg" class="img-fluid" alt="Spa"></div>
+            <div class="col-md-4"><img src="/images/lobby.jpg" class="img-fluid" alt="Lobby"></div>
+            <div class="col-md-4"><img src="/images/hotel-view.jpg" class="img-fluid" alt="View"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section">
+    <div class="container">
+        <h2 class="mb-4">Book Your Stay with Us Today</h2>
+        <a asp-controller="Rooms" asp-action="Index" class="btn btn-light btn-lg">
+            <i class="fas fa-calendar-check"></i> Reserve Now
+        </a>
+    </div>
+</section>

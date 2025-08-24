@@ -72,6 +72,9 @@ namespace HotelManagement.Web
 
 
             // Register Business Logic Layer (BLL) services
+            builder.Services.AddScoped<IEmailService, EmailService>();
+
+
             builder.Services.AddScoped<ICustomerService, CustomerService>();
 
             builder.Services.AddScoped<IRoomService, RoomService>();

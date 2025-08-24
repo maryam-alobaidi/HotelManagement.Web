@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<div class="container py-5">
+    <h2 class="text-center mb-4">Contact Us</h2>
+    <p class="text-center text-muted mb-5">
+        We’d love to hear from you. Please fill out the form below and we’ll get back to you soon.
+    </p>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-3 p-4">
+                <form asp-action="Send" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" name="name" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea name="message" class="form-control" rows="5" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Send Message</button>
+                </form>
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert alert-success mt-3">@ViewBag.Message</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Optional: Map -->
+<div class="container mt-5">
+    <h4 class="text-center mb-3">Find Us Here</h4>
+    <div class="ratio ratio-16x9">
+        <iframe src="https://www.google.com/maps/embed?pb=YOUR_GOOGLE_MAPS_EMBED_LINK"
+                style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+</div>
