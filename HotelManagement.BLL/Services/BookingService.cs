@@ -118,5 +118,24 @@ namespace HotelManagement.BLL.Services
             return await _bookingRepository.GetUnpaidBookingsAsync();
         }
 
+        public async Task<List<Booking>> GetBookingsByCustomerIdAsync(int customerId)
+        {
+            if (customerId <= 0)
+            {
+                throw new ArgumentException("Customer ID must be greater than zero.", nameof(customerId));
+            }
+
+            return await  _bookingRepository.GetBookingsByCustomerIdAsync(customerId);
+        }
+
+        public async Task<int> GetTotalBookingsAsync()
+        {
+           return await _bookingRepository.GetTotalBookingsAsync();
+        }
+
+        public async Task<int> GetPendingBookingsAsync()
+        {
+            return await  _bookingRepository.GetPendingBookingsAsync();
+        }
     }
 }

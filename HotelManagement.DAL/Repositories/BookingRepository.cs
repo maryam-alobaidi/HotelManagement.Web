@@ -161,7 +161,8 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 phoneNumber: reader.GetString(reader.GetOrdinal(nameof(Booking.Customer.PhoneNumber))),
                 address: reader.IsDBNull(reader.GetOrdinal(nameof(Booking.Customer.Address))) ? null : reader.GetString(reader.GetOrdinal(nameof(Booking.Customer.Address))),
                 nationality: reader.GetString(reader.GetOrdinal(nameof(Booking.Customer.Nationality))),
-                iDNumber: reader.GetString(reader.GetOrdinal(nameof(Booking.Customer.IDNumber)))
+                iDNumber: reader.GetString(reader.GetOrdinal(nameof(Booking.Customer.IDNumber))),
+                passwordHash: reader.GetString(reader.GetOrdinal(nameof(Booking.Customer.PasswordHash)))
             );
 
             Employee? employee = null;
@@ -279,8 +280,6 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
             return booking;
         }
 
-
-        //here is the problem 
         public async Task<IEnumerable<UnpaidBookingDto>> GetUnpaidBookingsAsync()
         {
             List<UnpaidBookingDto> bookings = new List<UnpaidBookingDto>();
@@ -300,11 +299,11 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
         }
         private UnpaidBookingDto MapToUpdateBooking(SqlDataReader reader)
         {
-         
+
             return new UnpaidBookingDto
             {
                 BookingID = reader.GetFieldValue<int>("BookingID"),
-                CustomerID= reader.GetFieldValue<int>("CustomerID"),
+                CustomerID = reader.GetFieldValue<int>("CustomerID"),
                 FullName = reader.GetFieldValue<string>("FullName"),
                 RoomNumber = reader.GetFieldValue<string>("RoomNumber"),
                 CheckInDate = reader.GetFieldValue<DateTime>("CheckInDate"),
@@ -312,6 +311,48 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
             };
         }
 
+        public async Task<List<Booking>> GetBookingsByCustomerIdAsync(int customerId)
+        {
+            var bookings = new List<Booking>();
+
+            using (SqlCommand command = new SqlCommand("Sp_GetBookingByCustomerID"))
+            {
+                command.Parameters.AddWithValue("@CustomerID", customerId);
+                command.CommandType = CommandType.StoredProcedure;
+
+                using (SqlDataReader reader = await PrimaryFunctions.GetAsync(command, _connectionString))
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        bookings.Add(MapToBooking(reader));
+                    }
+                }
+            }
+
+            return bookings;
+        }
+
+        public async Task<int> GetTotalBookingsAsync()
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand("SELECT COUNT(*) FROM Booking", connection);
+            await connection.OpenAsync();
+            return (int)await command.ExecuteScalarAsync();
+        }
+
       
+        public async Task<int> GetPendingBookingsAsync()
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(
+                "SELECT COUNT(*) FROM Booking WHERE BookingStatus = 0", connection); // 0 = Pending
+            await connection.OpenAsync();
+            return (int)await command.ExecuteScalarAsync();
+        }
+
+
+
+
+    
     }
 }

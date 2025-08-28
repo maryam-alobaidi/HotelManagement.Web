@@ -1,0 +1,69 @@
+﻿@model HotelManagement.Web.Models.ViewModels.BookingModel.BookingViewModel
+
+@{
+    ViewData["Title"] = "My Latest Booking";
+}
+
+<div class="container my-5">
+    <h2 class="text-center mb-4" style="color:#0d6efd;">My Latest Booking</h2>
+
+    @if (Model != null)
+    {
+        <div class="card shadow-lg mb-4" style="border-radius:15px; border-left: 5px solid #0d6efd;">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" style="border-radius:15px 15px 0 0;">
+                <h5 class="mb-0">Booking #@Model.BookingID</h5>
+                <span class="badge bg-warning text-dark">@Model.BookingStatus</span>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong>Customer:</strong> @Model.CustomerFullName</p>
+                        <p>
+                            <strong>Room:</strong>
+                            @Model.Room?.RoomNumber ?? "N/A"
+                            (@Model.Room?.BedCount ?? 0 beds, $@(Model.Room?.PricePerNight ?? 0.00M))
+                        </p>
+                        <p><strong>Booked By Employee:</strong> @Model.Employee?.Username ?? "Self"</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Check-in:</strong> @Model.CheckInDate.ToString("dd/MM/yyyy")</p>
+                        <p><strong>Check-out:</strong> @Model.CheckOutDate.ToString("dd/MM/yyyy")</p>
+                        <p><strong>Total Price:</strong> $@Model.TotalPrice</p>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <p><strong>Adults:</strong> @Model.NumAdults</p>
+                        <p><strong>Children:</strong> @(Model.NumChildren ?? 0)</p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <a asp-action="Create" asp-controller="Bookings" class="btn btn-success btn-lg">
+                            Book Another Room
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            You don't have any bookings yet. <a asp-controller="Rooms" asp-action="Index" class="alert-link">Book a room now!</a>
+        </div>
+    }
+</div>
+
+<style>
+    /* Custom card hover effect */
+    .card:hover {
+        transform: translateY(-5px);
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* Header badge styling */
+    .badge {
+        font-size: 1rem;
+        padding: 0.5rem 0.8rem;
+    }
+</style>

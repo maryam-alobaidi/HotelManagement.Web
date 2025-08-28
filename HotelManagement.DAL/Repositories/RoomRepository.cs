@@ -185,5 +185,25 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
                 return avilableRooms;
             }
         }
-    }
+
+        public async Task<int> GetTotalRoomsAsync()
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand("SELECT COUNT(*) FROM Room", connection);
+            await connection.OpenAsync();
+            return (int)await command.ExecuteScalarAsync();
+        }
+
+        public async Task<int> GetAvailableAllRoomsAsync()
+        {
+      
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(
+                "SELECT COUNT(*) FROM Room WHERE RoomStatusID = 1", connection); 
+            await connection.OpenAsync();
+            return (int)await command.ExecuteScalarAsync();
+        }
+
+    
+}
 }

@@ -1,0 +1,50 @@
+﻿@model HotelManagement.Web.Models.ViewModels.CustomerModel.CustomerCreateViewModel
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label asp-for="Firstname" class="form-label"></label>
+            <input asp-for="Firstname" class="form-control" />
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Lastname" class="form-label"></label>
+            <input asp-for="Lastname" class="form-control" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PhoneNumber" class="form-label"></label>
+        <input asp-for="PhoneNumber" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Nationality" class="form-label"></label>
+        <input asp-for="Nationality" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="IDNumber" class="form-label"></label>
+        <input asp-for="IDNumber" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" type="password" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ConfirmPassword" class="form-label"></label>
+        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+    </div>
+
+    <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-success">Save</button>
+    </div>
+</form>

@@ -47,6 +47,11 @@ public class CustomerService : ICustomerService
        return await _customerRepository.GetAllAsync();
     }
 
+    public async Task<Customer?> GetCustomerByEmailAsync(string email)
+    {
+      return await _customerRepository.GetByEmailAsync(email);
+    }
+
     public async Task<Customer> GetCustomerByIdAsync(int id)
     {
         Customer customerToFound = await _customerRepository.GetByIdAsync(id);
@@ -57,6 +62,11 @@ public class CustomerService : ICustomerService
         }
 
         return customerToFound;
+    }
+
+    public async Task<int> GetTotalCustomersAsync()
+    {
+       return await _customerRepository.GetTotalCustomersAsync();
     }
 
     public async Task<bool> UpdateCustomerAsync(Customer customer)

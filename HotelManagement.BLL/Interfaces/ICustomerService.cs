@@ -23,5 +23,9 @@ namespace HotelManagement.BLL.Interfaces
         Task<bool> UpdateCustomerAsync(Customer customer);
         Task<bool> DeleteCustomerAsync(int id);   
 
+        Task<Customer?> GetCustomerByEmailAsync(string email);
+
+        Task<int> GetTotalCustomersAsync();
+
     }
 }

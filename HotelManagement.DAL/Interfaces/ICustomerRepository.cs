@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using HotelManagement.Domain.Entities;
 
 namespace HotelManagement.DAL.Interfaces
@@ -15,6 +11,8 @@ namespace HotelManagement.DAL.Interfaces
         Task<IEnumerable<Customer>> GetAllAsync();
         Task <Customer> GetByIdAsync(int id);
         Task<Customer> GetByEmailAsync(string email);
+
+        Task<int> GetTotalCustomersAsync();
 
     }
 }

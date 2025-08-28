@@ -33,6 +33,7 @@ namespace HotelManagement.DAL.Repositories
                 command.Parameters.AddWithValue("@Address", (object)customer.Address ?? DBNull.Value);
                 command.Parameters.AddWithValue("@Nationality", customer. Nationality);
                 command.Parameters.AddWithValue("@IDNumber", customer. IDNumber);
+                command.Parameters.AddWithValue("@PasswordHash", customer.PasswordHash);
                 command.Parameters.AddWithValue("@CustomerID", SqlDbType.Int).Direction = ParameterDirection.Output;
                 try
                 {
@@ -99,6 +100,7 @@ namespace HotelManagement.DAL.Repositories
             using (SqlCommand command = new SqlCommand("Sp_GetCustomersByEmail"))
             {
                 command.Parameters.AddWithValue("@Email", email);
+             
                 command.CommandType = CommandType.StoredProcedure;
                 using (SqlDataReader reader = await PrimaryFunctions.GetAsync(command, _connectionString))
                 {     if (await reader.ReadAsync())
@@ -109,6 +111,7 @@ namespace HotelManagement.DAL.Repositories
             }
             return customer;
         }
+
 
         public async Task<Customer> GetByIdAsync(int id)
         {
@@ -168,7 +171,6 @@ namespace HotelManagement.DAL.Repositories
 
         private Customer MapToCustomer(SqlDataReader reader)
         {
-            
             return new Customer(
                 customerID: reader.GetInt32(reader.GetOrdinal(nameof(Customer.CustomerID))),
                 firstname: reader.GetString(reader.GetOrdinal(nameof(Customer.Firstname))),
@@ -177,8 +179,17 @@ namespace HotelManagement.DAL.Repositories
                 phoneNumber: reader.GetString(reader.GetOrdinal(nameof(Customer.PhoneNumber))),
                 address: reader.IsDBNull(reader.GetOrdinal(nameof(Customer.Address))) ? null : reader.GetString(reader.GetOrdinal(nameof(Customer.Address))),
                 nationality: reader.GetString(reader.GetOrdinal(nameof(Customer.Nationality))),
-                iDNumber: reader.GetString(reader.GetOrdinal(nameof(Customer.IDNumber)))
+                iDNumber: reader.GetString(reader.GetOrdinal(nameof(Customer.IDNumber))),
+                passwordHash: reader.IsDBNull(reader.GetOrdinal(nameof(Customer.PasswordHash))) ? string.Empty : reader.GetString(reader.GetOrdinal(nameof(Customer.PasswordHash)))
             );
+        }
+
+        public async Task<int> GetTotalCustomersAsync()
+        {
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand("SELECT COUNT(*) FROM Customers", connection);
+            await connection.OpenAsync();
+            return (int)await command.ExecuteScalarAsync();
         }
     }
 }

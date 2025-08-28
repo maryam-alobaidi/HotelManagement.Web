@@ -18,6 +18,8 @@ namespace HotelManagement.BLL.Interfaces
 
         Task<IEnumerable<Room>> GetAvailableRoomsAsync(DateTime startDate, DateTime endDate);
         Task<decimal> CalculateTotalPriceAsync(int roomID, DateTime checkInDate, DateTime checkOutDate, int numAdults, int? numChildren);
+        Task<int> GetTotalRoomsAsync();
+        Task<int> GetAvailableAllRoomsAsync();
 
         //Task<IEnumerable<Room>> GetRoomsByTypeAsync(int roomTypeId);
         //Task<IEnumerable<Room>> GetRoomsByStatusAsync(int roomStatusId);

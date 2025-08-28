@@ -4,30 +4,35 @@ namespace HotelManagement.Web.Models.ViewModels.CustomerModel
 {
     public class CustomerViewModel
     {
-
-        public int CustomerID { get;  set; }
+    
+        public int CustomerID { get; set; }
 
         [Display(Name = "First Name")]
-        public string Firstname { get;  set; }
+        public string Firstname { get; set; }
 
+        
         [Display(Name = "Last Name")]
-        public string Lastname { get;  set; }
+        public string Lastname { get; set; }
 
-        [Display(Name = "Email Address")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
 
+        
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
+       
         [Display(Name = "Address")]
-        public string? Address { get;  set; }
+        public string? Address { get; set; }
 
+      
         [Display(Name = "Nationality")]
-        public string Nationality { get;  set; }
+        public string Nationality { get; set; }
+
 
         [Display(Name = "ID Number")]
-        public string IDNumber { get;  set; }
+        public string IDNumber { get; set; }
 
-        public string Fullname => $"{Firstname} {Lastname}";
+        public string FullName => $"{Firstname} {Lastname}";
     }
 }

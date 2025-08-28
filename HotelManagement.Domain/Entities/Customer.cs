@@ -12,11 +12,12 @@ namespace HotelManagement.Domain.Entities
         public string? Address { get;  set; }
         public  string Nationality { get;  set; }
         public  string IDNumber { get;  set; }
+        public string PasswordHash { get; set; }
 
         public string FullName => $"{Firstname} {Lastname}"; // Property to get full name of the customer
 
         //for creare new customer
-        public Customer(string firstname, string lastname, string email, string phoneNumber, string? address, string nationality, string iDNumber)
+        public Customer(string firstname, string lastname, string email, string phoneNumber, string? address, string nationality, string iDNumber , string passwordHash)
         {
             Firstname = firstname ?? throw new ArgumentNullException(nameof(firstname));
             Lastname = lastname ?? throw new ArgumentNullException(nameof(lastname));
@@ -25,11 +26,12 @@ namespace HotelManagement.Domain.Entities
             Address = address;
             Nationality = nationality ?? throw new ArgumentNullException(nameof(nationality));
             IDNumber = iDNumber ?? throw new ArgumentNullException(nameof(iDNumber));
+            this.PasswordHash = passwordHash ?? throw new ArgumentNullException(nameof(PasswordHash));
         }
 
-
+       
         //for return data from database 
-        public Customer(int customerID, string firstname, string lastname, string email, string phoneNumber, string? address, string nationality, string iDNumber)
+        public Customer(int customerID, string firstname, string lastname, string email, string phoneNumber, string? address, string nationality, string iDNumber, string passwordHash)
         {
             CustomerID = customerID;
             Firstname = firstname;
@@ -39,6 +41,7 @@ namespace HotelManagement.Domain.Entities
             Address = address;
             Nationality = nationality;
             IDNumber = iDNumber;
+            PasswordHash = passwordHash;
         } 
         public Customer()
         {

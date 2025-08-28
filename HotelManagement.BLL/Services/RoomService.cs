@@ -165,6 +165,16 @@ public class RoomService : IRoomService
         return totalPrice;
     }
 
+    public async Task<int> GetTotalRoomsAsync()
+    {
+       return await _roomRepository.GetTotalRoomsAsync();
+    }
+
+    public async Task<int> GetAvailableAllRoomsAsync()
+    {
+        return await _roomRepository.GetAvailableAllRoomsAsync();
+    }
+
     //public Task<IEnumerable<Room>> GetRoomsByStatusAsync(int roomStatusId)
     //{
     //    throw new NotImplementedException();

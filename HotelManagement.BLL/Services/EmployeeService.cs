@@ -2,6 +2,7 @@
 using HotelManagement.Domain.Entities;
 using HotelManagement.Infrastructure.DAL.Interfaces;
 
+
 namespace HotelManagement.BLL.Services
 {
     public class EmployeeService : IEmployeeService
@@ -45,6 +46,11 @@ namespace HotelManagement.BLL.Services
                 throw new ArgumentException("Employee ID must be greater than zero.", nameof(id));
             }
             return await _employeeRepository.GetByIdAsync(id);
+        }
+
+        public async Task<Employee?> GetEmployeeByUsernameAsync(string username)
+        {
+           return await _employeeRepository.GetByUsernameAsync(username);
         }
 
         public async Task<bool> UpdateEmployeeAsync(Employee employee)

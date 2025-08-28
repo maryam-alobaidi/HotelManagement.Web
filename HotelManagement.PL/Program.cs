@@ -4,6 +4,7 @@ using HotelManagement.DAL.Interfaces;
 using HotelManagement.DAL.Repositories;
 using HotelManagement.Infrastructure.DAL.Interfaces;
 using HotelManagement.Infrastructure.DAL.Repositories;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
@@ -14,157 +15,104 @@ namespace HotelManagement.Web
     {
         public static void Main(string[] args)
         {
-        
             var builder = WebApplication.CreateBuilder(args);
 
+            // Logging
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
+            builder.Logging.AddDebug();
 
-            // هنا يتم إعداد خدمات التسجيل
-            builder.Logging.ClearProviders(); // لإزالة أي موفرات تسجيل افتراضية لا تريدينها
-            builder.Logging.AddConsole(); // لإضافة التسجيل إلى الكونسول
-            builder.Logging.AddDebug();   // لإضافة التسجيل إلى نافذة Debug في Visual Studio
-                                          // يمكنك إضافة موفرات أخرى هنا إذا كنت تستخدمين Serilog, NLog, إلخ.
-
-            
+            // Connection string
             var connectionString = builder.Configuration.GetConnectionString("ConnectionString");
-           
-        // Register Data Access Layer (DAL) services
 
-            builder.Services.AddScoped<ICustomerRepository>(provider => new CustomerRepository(connectionString,provider.GetRequiredService<ILogger<CustomerRepository>>()));
+            // -----------------------------
+            // Register DAL Repositories
+            // -----------------------------
+            builder.Services.AddScoped<ICustomerRepository>(provider =>
+                new CustomerRepository(connectionString, provider.GetRequiredService<ILogger<CustomerRepository>>()));
+            builder.Services.AddScoped<IEmployeeRepository>(provider =>
+                new EmployeeRepository(connectionString, provider.GetRequiredService<ILogger<EmployeeRepository>>()));
+            builder.Services.AddScoped<IRoomRepository>(provider =>
+                new RoomRepository(connectionString, provider.GetRequiredService<ILogger<RoomRepository>>()));
+            builder.Services.AddScoped<IRoomTypesRepository>(provider =>
+                new RoomTypesRepository(connectionString, provider.GetRequiredService<ILogger<RoomTypesRepository>>()));
+            builder.Services.AddScoped<IRoomStatusesRepository>(provider =>
+                new RoomStatusesRepository(connectionString, provider.GetRequiredService<ILogger<RoomStatusesRepository>>()));
+            builder.Services.AddScoped<IBookingRepository>(provider =>
+                new BookingRepository(connectionString, provider.GetRequiredService<ILogger<BookingRepository>>()));
+            builder.Services.AddScoped<IInvoiceItemRepository>(provider =>
+                new InvoiceItemRepository(connectionString));
+            builder.Services.AddScoped<IInvoiceRepository>(provider =>
+                new InvoiceRepository(connectionString));
+            builder.Services.AddScoped<IPaymentMethodsRepository>(provider =>
+                new PaymentMethodsRepository(connectionString));
+            builder.Services.AddScoped<IPaymentsRepository>(provider =>
+                new PaymentsRepository(connectionString));
 
-            builder.Services.AddScoped<IEmployeeRepository>(provider => new EmployeeRepository(connectionString, provider.GetRequiredService<ILogger<EmployeeRepository>>()));
-
-            builder.Services.AddScoped<IRoomRepository>(provider => new RoomRepository(connectionString, provider.GetRequiredService < ILogger < RoomRepository >>()));
-
-          builder.Services.AddScoped<IRoomTypesRepository>(provider => new RoomTypesRepository(connectionString,provider.GetRequiredService<ILogger<RoomTypesRepository>>()));
-
-            builder.Services.AddScoped<IRoomStatusesRepository>(provider => new RoomStatusesRepository(connectionString, provider.GetRequiredService <ILogger<RoomStatusesRepository>>()));
-
-            builder.Services.AddScoped<IBookingRepository>(provider => new BookingRepository(connectionString, provider.GetRequiredService <ILogger<BookingRepository>>()));
-
-            builder.Services.AddScoped<IInvoiceItemRepository>(provider => new InvoiceItemRepository(connectionString));
-
-            builder.Services.AddScoped<IInvoiceRepository>(provider => new InvoiceRepository(connectionString));
-
-            builder.Services.AddScoped<IPaymentMethodsRepository>(provider => new PaymentMethodsRepository(connectionString));
-
-            builder.Services.AddScoped<IPaymentsRepository>(provider => new PaymentsRepository(connectionString));
-
+            // -----------------------------
+            // Register BLL Services
+            // -----------------------------
             builder.Services.AddScoped<IPasswordHasherService, PasswordHasherService>();
-
-
-            // AddAsync services to the container.
-            builder.Services.AddControllersWithViews();
-
-
-
-            //ex for mi
-            // ستقوم باختيار واحدة فقط من هذه بناءً على احتياجاتك:
-
-            // الخيار الأكثر شيوعًا للخدمات والمستودعات في تطبيقات الويب
-            // builder.Services.AddScoped<ICustomerService, CustomerService>();
-
-            // أو هذا إذا كنت تحتاج إلى نسخة جديدة في كل مرة يتم فيها طلبها
-            // builder.Services.AddTransient<ICustomerService, CustomerService>();
-
-            // أو هذا إذا كنت تحتاج إلى نسخة واحدة فقط طوال عمر التطبيق
-            // builder.Services.AddSingleton<ICustomerService, CustomerService>();
-
-
-
-            // Register Business Logic Layer (BLL) services
-            builder.Services.AddScoped<IEmailService, EmailService>();
-
-
+            builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<ICustomerService, CustomerService>();
-
-            builder.Services.AddScoped<IRoomService, RoomService>();
-
-            builder.Services.AddScoped<IRoomTypeService, RoomTypeService>();
-
-            builder.Services.AddScoped<IRoomStatuseService, RoomStatuseService>();
-
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-
-            builder.Services.AddScoped<IPasswordHasherService, PasswordHasherService>();
-
+            builder.Services.AddScoped<IRoomService, RoomService>();
+            builder.Services.AddScoped<IRoomTypeService, RoomTypeService>();
+            builder.Services.AddScoped<IRoomStatuseService, RoomStatuseService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IBookingService, BookingService>();
-
             builder.Services.AddScoped<IInvoiceItemService, InvoiceItemService>();
-
             builder.Services.AddScoped<IInvoiceService, InvoiceService>();
-
             builder.Services.AddScoped<IPaymentMethodService, PaymentMethodService>();
-
             builder.Services.AddScoped<IPaymentService, PaymentService>();
 
-            //for the Localization culture settings
 
-            builder.Services.AddControllersWithViews(); // تأكدي أن هذه موجودة
 
-            // *** الحل هنا: إعدادات الثقافة ***
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+    });
+
+            // Add MVC
+            builder.Services.AddControllersWithViews();
+
+            // -----------------------------
+            // Localization Settings
+            // -----------------------------
             builder.Services.Configure<RequestLocalizationOptions>(options =>
             {
-                // تحديد الثقافة الافتراضية والثقافات المدعومة. en-US تستخدم النقطة.
                 var defaultCulture = new CultureInfo("en-US");
-                var supportedCultures = new[] { defaultCulture };
-
                 options.DefaultRequestCulture = new RequestCulture(defaultCulture);
-                options.SupportedCultures = supportedCultures;
-                options.SupportedUICultures = supportedCultures;
-
-                // مسح مزودي الثقافة الآخرين لضمان فرض الثقافة المحددة
-                // هذا السطر مهم جداً لضمان عدم تداخل أي إعدادات أخرى (مثل إعدادات المتصفح).
+                options.SupportedCultures = new[] { defaultCulture };
+                options.SupportedUICultures = new[] { defaultCulture };
                 options.RequestCultureProviders.Clear();
-                // يمكنكِ إضافة مزود واحد فقط إذا أردتِ السماح برؤوس Accept-Language من المتصفح، لكن مع فرض الأرقام
-                // options.RequestCultureProviders.Insert(0, new AcceptLanguageHeaderRequestCultureProvider()); 
-                // أو لا تضيفي أي شيء بعد Clear() لفرض الثقافة التي حددتيها بقوة.
             });
 
-
+            // Authorization
             builder.Services.AddAuthorization();
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Middleware
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");//  لاجل عدم ضهور الاخطاء البرمجيه الحساسه للمستخدم اذا كان ليس في بيئة التطوير (أي في بيئات الإنتاج أو الاختبار)، يستخدم هذا Middleware للتعامل مع الأخطاء في التطبيق. في حالة حدوث خطأ، سيتم توجيه المستخدم إلى صفحة الخطأ المحددة.
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseRequestLocalization();
+            app.UseAuthorization();
 
-            // Middlewares are components that are assembled into an application pipeline to handle requests and responses.
-            //البرامج الوسيطة هي مكونات يتم تجميعها في خط أنابيب "بايبلين" التطبيق للتعامل مع الطلبات والاستجابات.
-
-            app.UseHttpsRedirection();//: إذا تلقى التطبيق طلب HTTP غير آمن (على المنفذ 80 مثلاً)، فإنه يقوم بإعادة توجيه (redirect) هذا الطلب تلقائيًا إلى عنوان URL الآمن الخاص بـ HTTPS (على المنفذ 443 عادةً).
-
-           // لماذا مهم؟ لضمان أن جميع الاتصالات بين العميل والخادم مشفرة، مما يزيد من الأمان.
-
-            app.UseStaticFiles();// ملفات ثابته Middleware 
-
-            //  app.UseRouting();// ملفات يستخدم لتحديد الـ Controller والـ Action المناسبين للطلب بناءً على الـ URL ..Middleware 
-            app.UseRequestLocalization();// يستخدم لتحديد الثقافة (Culture) المستخدمة في التطبيق بناءً على إعدادات المستخدم أو الطلب. هذا مهم جدًا للتطبيقات التي تحتاج إلى دعم لغات متعددة أو تنسيقات أرقام وتواريخ مختلفة.
-            app.UseAuthorization();// يستخدم للتحقق من هوية المستخدم (هل المستخدم الذي يرسل الطلب هو من يدعي أنه هو؟). Middleware 
-
-
-                // ماذا يفعل: يحدد كيف يجب أن تبدو عناوين URL وكيفية ربطها بـ Controllers و Actions.
-                
-                //name: "default": اسم لهذا المسار.
-                
-                //pattern: "{controller=Home}/{action=Index}/{id?}": هذا هو قالب المسار.
-                
-                //{ controller = Home}: يعني أن الجزء الأول من URL سيكون اسم الـ Controller، وإذا لم يتم تحديده، فسيكون الافتراضي هو Home.
-                
-                //{ action = Index}: يعني أن الجزء الثاني سيكون اسم الـ Action(الدالة) داخل الـ Controller، والافتراضي هو Index.
-                
-               //{ id ?}: يعني أن الجزء الثالث اختياري ويمثل معرفًا(ID).
-
-
-
+            // -----------------------------
+            // Default Route: Login page
+            // -----------------------------
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-
+                pattern: "{controller=Account}/{action=Login}/{id?}");
 
             app.Run();
         }

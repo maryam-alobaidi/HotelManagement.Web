@@ -1,0 +1,95 @@
+﻿@using HotelManagement.Domain.Entities
+@using static HotelManagement.Domain.Entities.Employee
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="card shadow-lg p-4" style="width: 420px; border-radius: 15px;">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold text-primary">Welcome Back</h2>
+            <p class="text-muted">Please select login type</p>
+        </div>
+
+        <form asp-action="Login" method="post">
+            <!-- User Type -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Login as</label>
+                <select id="userType" name="userType" class="form-select" onchange="toggleFields()">
+                    <option value="">-- Select User Type --</option>
+                    <option value="Employee">Employee</option>
+                    <option value="Customer">Customer</option>
+                </select>
+            </div>
+
+            <!-- Employee Fields -->
+            <div id="employeeFields" style="display:none;">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Username</label>
+                    <input type="text" name="username" class="form-control" placeholder="Enter username" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Role</label>
+                    <select name="role" class="form-select">
+                        @foreach (var role in Enum.GetNames(typeof(EmployeeRole)))
+                        {
+                            <option value="@role">@role</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <!-- Customer Fields -->
+            <div id="customerFields" style="display:none;">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Email</label>
+                    <input type="email" name="email" class="form-control" placeholder="Enter email" />
+                </div>
+            </div>
+
+            <!-- Password (hidden until choice) -->
+            <div id="passwordField" class="mb-3" style="display:none;">
+                <label class="form-label fw-semibold">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Enter password" />
+            </div>
+
+            <!-- Submit -->
+            <div class="d-grid mt-3">
+                <button type="submit" class="btn btn-primary fw-bold">Login</button>
+            </div>
+        </form>
+
+        <!-- Validation Errors -->
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger mt-3">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <p class="mb-0">@error.ErrorMessage</p>
+                }
+            </div>
+        }
+
+        <div class="text-center mt-4">
+            <p class="text-muted">
+                Don’t have an account?
+                <a asp-controller="Account" asp-action="Register" class="text-decoration-none">Register</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleFields() {
+            var userType = document.getElementById("userType").value;
+
+            document.getElementById("employeeFields").style.display = (userType === "Employee") ? "block" : "none";
+            document.getElementById("customerFields").style.display = (userType === "Customer") ? "block" : "none";
+
+            // Show password field only if a type is selected
+            document.getElementById("passwordField").style.display = (userType !== "") ? "block" : "none";
+        }
+    </script>
+}

@@ -1,0 +1,81 @@
+﻿@model HotelManagement.Web.Models.ViewModels.DashboardModel.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container my-5">
+    <h2 class="text-center mb-4" style="color:#0d6efd;">Employee Dashboard</h2>
+
+    <div class="row g-4">
+
+        <!-- Total Bookings -->
+        <div class="col-md-4">
+            <div class="card shadow-sm text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Bookings</h5>
+                    <p class="card-text display-6">@Model.TotalBookings</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Bookings -->
+        <div class="col-md-4">
+            <div class="card shadow-sm text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Bookings</h5>
+                    <p class="card-text display-6">@Model.PendingBookings</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Rooms -->
+        <div class="col-md-4">
+            <div class="card shadow-sm text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Total Rooms</h5>
+                    <p class="card-text display-6">@Model.TotalRooms</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Rooms -->
+        <div class="col-md-6">
+            <div class="card shadow-sm text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Available Rooms</h5>
+                    <p class="card-text display-6">@Model.AvailableRooms</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Customers -->
+        <div class="col-md-6">
+            <div class="card shadow-sm text-white bg-secondary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Customers</h5>
+                    <p class="card-text display-6">@Model.TotalCustomers</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row mt-5">
+        <div class="col text-center">
+            <a asp-controller="Bookings" asp-action="Index" class="btn btn-primary btn-lg mx-2">Manage Bookings</a>
+            <a asp-controller="Rooms" asp-action="Index" class="btn btn-success btn-lg mx-2">Manage Rooms</a>
+            <a asp-controller="Customers" asp-action="Index" class="btn btn-warning btn-lg mx-2">Manage Customers</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 15px;
+        transition: transform 0.3s ease-in-out;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+</style>

@@ -7,12 +7,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 
 namespace HotelManagement.Web.Controllers
 {
 
-   
+    [Authorize(Roles = "Customer")]
     public class BookingsController:Controller
     {
         private readonly IBookingService _bookingService;
@@ -31,7 +35,56 @@ namespace HotelManagement.Web.Controllers
             _customerService = customerService;
         }
 
-        [HttpGet]
+
+        public async Task<IActionResult> MyBookings()
+        {
+            var email=User.Claims.FirstOrDefault(c=>c.Type==ClaimTypes.Email)?.Value;
+            if(string.IsNullOrEmpty(email))
+            {
+                _logger.LogWarning("Email claim not found for the current user.");
+                return Unauthorized("Email claim not found.");
+            }
+
+            var customer = await _customerService.GetCustomerByEmailAsync(email);
+            if (customer == null)
+            {
+                _logger.LogWarning("Customer not found for the current user.");
+                return NotFound("Customer not found.");
+            }
+
+            var allBookings = await _bookingService.GetBookingsByCustomerIdAsync(customer.CustomerID);
+            var latestBooking = allBookings.OrderByDescending(b => b.BookingDate).FirstOrDefault();
+
+            if (latestBooking == null )
+            {
+                _logger.LogInformation("No bookings found for customer ID {CustomerId}.", customer.CustomerID);
+                return View(Enumerable.Empty<BookingViewModel>());
+            }
+
+            var bookingViewModels =new BookingViewModel
+            {
+                BookingID = latestBooking.BookingID,
+                RoomID = latestBooking.RoomID,
+                CustomerID = latestBooking.CustomerID,
+                CheckInDate = latestBooking.CheckInDate,
+                CheckOutDate = latestBooking.CheckOutDate,
+                BookingDate = latestBooking.BookingDate,
+                NumAdults = latestBooking.NumAdults,
+                NumChildren = latestBooking.NumChildren,
+                TotalPrice = latestBooking.TotalPrice,
+                BookingStatus = latestBooking.BookingStatus,
+                BookedByEmployeeID = latestBooking.BookedByEmployeeID,
+                CustomerFullName = latestBooking.Customer != null ? latestBooking.Customer.FullName : null,
+                Employee = latestBooking.Employee,
+                Room = latestBooking.Room,
+                Customer = latestBooking.Customer
+            };
+
+            return View(bookingViewModels);
+        }
+
+
+            [HttpGet]
         public async Task<IActionResult> Index()
         {
             var Bookings = await _bookingService.GetAllBookingsAsync();
@@ -211,7 +264,7 @@ namespace HotelManagement.Web.Controllers
             if (bookingID>0)
             {
                 _logger.LogInformation("New booking created successfully.");
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(MyBookings));
             }
             else
             {

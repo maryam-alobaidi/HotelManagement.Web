@@ -1,9 +1,4 @@
 ﻿using HotelManagement.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelManagement.Infrastructure.DAL.Interfaces
 {
@@ -14,6 +9,7 @@ namespace HotelManagement.Infrastructure.DAL.Interfaces
         Task<bool> UpdateAsync(Employee employee);
         Task<IEnumerable<Employee>> GetAllAsync();
         Task<Employee?> GetByIdAsync(int id);
-      
+        Task<Employee?> GetByUsernameAsync(string username);
+
     }
 }

@@ -93,6 +93,32 @@ namespace HotelManagement.Infrastructure.DAL.Repositories
             }
         }
 
+        public async Task<Employee?> GetByUsernameAsync(string username)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new ArgumentException("Username cannot be null or empty.", nameof(username));
+            }
+
+            using (SqlCommand command = new SqlCommand("Sp_GetEmployeesByUsername"))
+            {
+                command.Parameters.AddWithValue("@Username", username);
+                command.CommandType = CommandType.StoredProcedure;
+                using (SqlDataReader reader = await PrimaryFunctions.GetAsync(command, _connectionString))
+                {
+                    if (await reader.ReadAsync())
+                    {
+                        return MapToEmployee(reader);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("No employee found with Username {Username}", username);
+                        return null;
+                    }
+                }
+            }
+        }
+
         public async Task<bool> UpdateAsync(Employee employee)
         {
             using (SqlCommand command = new SqlCommand("Sp_UpdateEmployees"))

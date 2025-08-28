@@ -1,6 +1,6 @@
 ﻿using HotelManagement.BLL.Interfaces;
 using HotelManagement.Domain.Entities;
-using HotelManagement.Web.Models.ViewModels;
+using HotelManagement.Web.Models.ViewModels.CustomerModel;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -10,10 +10,12 @@ namespace HotelManagement.Web.Controllers
     {
         private readonly ICustomerService _customerService;
         private readonly ILogger<CustomersController> _logger;
-        public CustomersController(ICustomerService customerService, ILogger<CustomersController> logger)
+        private readonly IPasswordHasherService  _passwordHasher;
+        public CustomersController(ICustomerService customerService, ILogger<CustomersController> logger, IPasswordHasherService passwordHasher)
         {
             _customerService = customerService ?? throw new ArgumentNullException(nameof(customerService));
             _logger = logger;
+            _passwordHasher = passwordHasher;
         }
 
         [HttpGet]
@@ -23,7 +25,7 @@ namespace HotelManagement.Web.Controllers
             if (customers == null || !customers.Any())
             {
                 _logger.LogWarning("Index: No customers found.");
-                return View("no customers");
+                return View();
             }
 
             var customerViewModels = customers.Select(c => new CustomerViewModel
@@ -48,6 +50,7 @@ namespace HotelManagement.Web.Controllers
         {
             if (id <= 0)
             {
+                
                 return BadRequest("Invalid customerExisting ID.");
             }
 
@@ -55,7 +58,7 @@ namespace HotelManagement.Web.Controllers
 
             if (customer == null)
             {
-                return NotFound("Customer not found.");
+                return NotFound();
             }
             var customerViewModel = new CustomerViewModel
             {
@@ -78,12 +81,12 @@ namespace HotelManagement.Web.Controllers
         [HttpGet] 
         public IActionResult Create()
         {
-            return View(); // This returns the Create.cshtml view with an empty CustomerViewModel
+            return PartialView("_CreateCustomer", new CustomerCreateViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CustomerViewModel model)
+        public async Task<IActionResult> Create(CustomerCreateViewModel model)
         {
             if (model == null)
             {
@@ -100,9 +103,10 @@ namespace HotelManagement.Web.Controllers
 
             try
             {
+                string hashPassword = _passwordHasher.HashPassword(model.Password);
                 var customerDomain = new Customer(
                     model.Firstname, model.Lastname, model.Email, model.PhoneNumber,
-                    model.Address, model.Nationality, model.IDNumber
+                    model.Address, model.Nationality, model.IDNumber, hashPassword
                 );
 
                 await _customerService.AddCustomerAsync(customerDomain);
@@ -154,7 +158,7 @@ namespace HotelManagement.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CustomerViewModel model)
+        public async Task<IActionResult> Edit(int id, CustomerEditViewModel model)
         {
             if (id != model.CustomerID)
             {
@@ -166,7 +170,16 @@ namespace HotelManagement.Web.Controllers
                 return BadRequest("Customer data is null.");
             }
 
-         
+
+            var existingCustomer = await _customerService.GetCustomerByIdAsync(id);
+            if (existingCustomer == null)
+            {
+                return NotFound("Customer not found.");
+            }
+            // تحقق من صحة النموذج
+
+
+
             if (ModelState.IsValid) 
             {
                 try
@@ -179,7 +192,8 @@ namespace HotelManagement.Web.Controllers
                        phoneNumber: model.PhoneNumber,
                        address: model.Address,
                        nationality: model.Nationality,
-                       iDNumber: model.IDNumber
+                       iDNumber: model.IDNumber,
+                       passwordHash: existingCustomer.PasswordHash // الاحتفاظ بكلمة المرور الحالية
                     );
 
                     await _customerService.UpdateCustomerAsync(customer);
