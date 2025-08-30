@@ -140,7 +140,7 @@ namespace HotelManagement.Web.Controllers
             }
 
             // Map domain model to ViewModel for displaying existing data in the form
-            var model = new CustomerViewModel
+            var model = new CustomerEditViewModel
             {
                 CustomerID = customer.CustomerID,
                 Firstname = customer.Firstname,
@@ -176,10 +176,7 @@ namespace HotelManagement.Web.Controllers
             {
                 return NotFound("Customer not found.");
             }
-            // تحقق من صحة النموذج
-
-
-
+     
             if (ModelState.IsValid) 
             {
                 try

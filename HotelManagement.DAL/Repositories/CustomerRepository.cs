@@ -147,6 +147,7 @@ namespace HotelManagement.DAL.Repositories
                 command.Parameters.AddWithValue("@Address", (object)customer.Address ?? DBNull.Value);
                 command.Parameters.AddWithValue("@Nationality", customer.Nationality);
                 command.Parameters.AddWithValue("@IDNumber", customer.IDNumber);
+                command.Parameters.AddWithValue("@PasswordHash", customer.PasswordHash);
 
                 command.CommandType = CommandType.StoredProcedure;
                 try

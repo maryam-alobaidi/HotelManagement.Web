@@ -30,19 +30,26 @@
             <div class="form-group mb-3">
                 <label asp-for="RoomID" class="form-label"></label>
                 <select asp-for="RoomID" asp-items="Model.AvailableRooms" class="form-select" id="roomDropdown">
-                    @* الخيار الافتراضي سيتم تحديثه بواسطة JS *@
                     <option value="">-- Select Dates to Load Rooms --</option>
                 </select>
                 <span asp-validation-for="RoomID" class="text-danger"></span>
             </div>
 
-            @* باقي حقول النموذج (Customer, Adults, Children, Employee) كما هي *@
+            @* Customer يظهر فقط إذا كان الموظف هو من يحجز *@
             <div class="form-group mb-3">
-                <label asp-for="CustomerID" class="form-label"></label>
-                <select asp-for="CustomerID" asp-items="Model.AvailableCustomers" class="form-select">
-                    <option value="">-- Select Customer --</option>
-                </select>
-                <span asp-validation-for="CustomerID" class="text-danger"></span>
+                @if (User.IsInRole("Receptionist"))
+                {
+                    <label asp-for="CustomerID" class="form-label"></label>
+                    <select asp-for="CustomerID" asp-items="Model.AvailableCustomers" class="form-select">
+                        <option value="">-- Select Customer --</option>
+                    </select>
+                    <span asp-validation-for="CustomerID" class="text-danger"></span>
+                }
+                else if (User.IsInRole("Customer"))
+                {
+                    @* نخفي CustomerID لأنه الزبون الحالي *@
+                    <input type="hidden" asp-for="CustomerID" />
+                }
             </div>
 
             <div class="form-group mb-3">
@@ -53,23 +60,31 @@
 
             <div class="form-group mb-3">
                 <label asp-for="NumChildren" class="form-label"></label>
-                <input asp-for="NumChildren" type="number" class="form-control"  />
+                <input asp-for="NumChildren" type="number" class="form-control" />
                 <span asp-validation-for="NumChildren" class="text-danger"></span>
             </div>
 
+            @* Employee يحجز (إما نعرض ComboBox أو نخفيه إذا عندك ID بالـ Claims) *@
             <div class="form-group mb-3">
-                <label asp-for="BookedByEmployeeID" class="form-label"></label>
-                <select asp-for="BookedByEmployeeID" asp-items="Model.AvailableEmployees" class="form-select">
-                    <option value="">-- Select Employee --</option>
-                </select>
-                <span asp-validation-for="BookedByEmployeeID" class="text-danger"></span>
+                @if (User.IsInRole("Receptionist"))
+                {
+                    <label asp-for="BookedByEmployeeID" class="form-label"></label>
+                    <select asp-for="BookedByEmployeeID" asp-items="Model.AvailableEmployees" class="form-select">
+                        <option value="">-- Select Employee --</option>
+                    </select>
+                    <span asp-validation-for="BookedByEmployeeID" class="text-danger"></span>
+                }
+                else if (User.IsInRole("Customer"))
+                {
+                    @* الزبون يحجز بنفسه، نخلي القيمة فاضية أو null *@
+                    <input type="hidden" asp-for="BookedByEmployeeID" value="" />
+                }
             </div>
 
             <div class="form-group mt-4 mb-5">
                 <button type="submit" class="btn btn-primary">Create Booking</button>
                 <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
             </div>
-
         </form>
     </div>
 </div>
@@ -80,34 +95,31 @@
     }
     <script>
         $(document).ready(function () {
-            // Function to load available rooms via AJAX
             function loadAvailableRooms() {
                 var checkInDate = $('#checkInDate').val();
                 var checkOutDate = $('#checkOutDate').val();
                 var roomDropdown = $('#roomDropdown');
 
-                // Clear previous options and add a loading message
                 roomDropdown.empty().append($('<option>', {
                     value: '',
                     text: 'Loading available rooms...'
                 }));
 
-                // Only proceed if both dates are selected and valid
                 if (checkInDate && checkOutDate && (new Date(checkOutDate) > new Date(checkInDate))) {
                     $.ajax({
-                        url: '@Url.Action("GetAvailableRoomsByDates", "Bookings")', // Correct path to your new action
+                        url: '@Url.Action("GetAvailableRoomsByDates", "Bookings")',
                         type: 'GET',
                         data: {
                             startDate: checkInDate,
                             endDate: checkOutDate
                         },
                         success: function (data) {
-                            roomDropdown.empty(); // Clear loading message
+                            roomDropdown.empty();
                             if (data.length > 0) {
                                 $.each(data, function (i, room) {
                                     roomDropdown.append($('<option>', {
-                                        value: room.value, // SelectListItem.Value
-                                        text: room.text   // SelectListItem.Text
+                                        value: room.value,
+                                        text: room.text
                                     }));
                                 });
                             } else {
@@ -126,7 +138,6 @@
                         }
                     });
                 } else {
-                    // If dates are not valid, show appropriate message
                     roomDropdown.empty().append($('<option>', {
                         value: '',
                         text: '-- Select valid dates --'
@@ -134,11 +145,7 @@
                 }
             }
 
-            // Attach event listeners to date inputs
             $('#checkInDate, #checkOutDate').on('change', loadAvailableRooms);
-
-            // Optional: Load rooms on initial page load if default dates are set
-            // And if you want to initially show rooms based on these defaults
             loadAvailableRooms();
         });
     </script>

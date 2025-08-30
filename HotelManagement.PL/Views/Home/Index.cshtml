@@ -8,7 +8,6 @@
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* Navbar */
     .navbar {
         background-color: rgba(30, 30, 60, 0.9);
     }
@@ -24,7 +23,6 @@
                 color: #ffd700 !important;
             }
 
-    /* Hero section */
     .hero-section {
         background: url('/images/hotel-hero-background.jpg') no-repeat center center;
         background-size: cover;
@@ -69,15 +67,14 @@
         font-size: 1.2rem;
         border-radius: 50px;
         transition: all 0.3s;
-        position: relative; /* يجعل الزر في طبقة منفصلة عن المحتوى */
-        z-index: 10; /* أعلى من أي عناصر تغطيه */
+        position: relative;
+        z-index: 10;
     }
 
         .btn-hero:hover {
             transform: scale(1.05);
         }
 
-    /* Section Titles */
     .section-title {
         font-size: 2.5rem;
         font-weight: bold;
@@ -86,13 +83,11 @@
         color: #1e1e3c;
     }
 
-    /* About Section */
     .about-img {
         border-radius: 20px;
         box-shadow: 0 8px 20px rgba(0,0,0,0.3);
     }
 
-    /* Service cards */
     .card-custom {
         border: none;
         border-radius: 20px;
@@ -111,7 +106,6 @@
         color: #ffb400;
     }
 
-    /* Gallery */
     .gallery img {
         border-radius: 15px;
         transition: transform 0.3s ease-in-out;
@@ -121,7 +115,6 @@
             transform: scale(1.08);
         }
 
-    /* CTA Section */
     .cta-section {
         background: linear-gradient(135deg, #1e1e3c, #ffb400);
         color: white;
@@ -159,9 +152,20 @@
     <div class="hero-content">
         <h1>Welcome to Our Luxury Hotel</h1>
         <p class="lead mb-4">Where elegance meets comfort in the heart of the city.</p>
-        <a asp-controller="Bookings" asp-action="Index" class="btn btn-warning btn-lg btn-hero me-3">
-            <i class="fas fa-bed"></i> Book Now
-        </a>
+
+        @if (User.Identity.IsAuthenticated && (User.IsInRole("Customer") || User.IsInRole("Receptionist")))
+        {
+            <a asp-controller="Bookings" asp-action="Create" class="btn btn-warning btn-lg btn-hero me-3">
+                <i class="fas fa-bed"></i> Book Now
+            </a>
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Login" class="btn btn-warning btn-lg btn-hero me-3">
+                <i class="fas fa-bed"></i> Book Now
+            </a>
+        }
+
         <a asp-controller="Contact" asp-action="Index" class="btn btn-outline-light btn-lg btn-hero">
             <i class="fas fa-phone-alt"></i> Contact Us
         </a>
@@ -239,8 +243,18 @@
 <section class="cta-section">
     <div class="container">
         <h2 class="mb-4">Book Your Stay with Us Today</h2>
-        <a asp-controller="Bookings" asp-action="Index" class="btn btn-light btn-lg btn-hero">
-            <i class="fas fa-calendar-check"></i> Reserve Now
-        </a>
+
+        @if (User.Identity.IsAuthenticated && (User.IsInRole("Customer") || User.IsInRole("Receptionist")))
+        {
+            <a asp-controller="Bookings" asp-action="Create" class="btn btn-light btn-lg btn-hero">
+                <i class="fas fa-calendar-check"></i> Reserve Now
+            </a>
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Login" class="btn btn-light btn-lg btn-hero">
+                <i class="fas fa-calendar-check"></i> Reserve Now
+            </a>
+        }
     </div>
 </section>
