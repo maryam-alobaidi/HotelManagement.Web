@@ -32,15 +32,16 @@ namespace HotelManagement.Web.Controllers
         // GET: PaymentController
         public async Task<IActionResult> Index()
         {
-            var payment = await _paymentService.GetPaymentDetailsAsync();
+            var payments = await _paymentService.GetPaymentDetailsAsync();
 
-            if (payment == null || !payment.Any())
+            if (payments == null || !payments.Any())
             {
-                _logger.LogError("Index:The Payment data are null.");
-                return NotFound();
+                _logger.LogInformation("No payments found.");
+                ViewBag.Message = "There are no payments yet.";
+                return View(new List<PaymentDetailsViewModel>()); // قائمة فارغة
             }
 
-            var paymentDetailsViewModel = payment.Select(p => new PaymentDetailsViewModel
+            var model = payments.Select(p => new PaymentDetailsViewModel
             {
                 PaymentID = p.PaymentID,
                 InvoiceID = p.InvoiceID,
@@ -52,28 +53,31 @@ namespace HotelManagement.Web.Controllers
                 Username = p.Username,
                 InvoiceStatus = p.InvoiceStatus,
                 PaymentMethodName = p.PaymentMethodName
+            }).ToList();
 
-            })
-            .ToList();
-
-
-            return View(paymentDetailsViewModel);
+            return View(model);
         }
+
 
         // GET: PaymentController/Details/5
         public async Task<ActionResult> Details(int id)
         {
             if (id <= 0)
             {
-                _logger.LogError("Details:Invalid Payment ID.");
-                return BadRequest("Invalid Payment ID.");
+                _logger.LogError("Details: Invalid Payment ID.");
+                ViewBag.Message = "Invalid Payment ID.";
+                return View("DetailsEmpty");
             }
+
             var payment = await _paymentService.GetPaymentDetailsByIdAsync(id);
+
             if (payment == null)
             {
-                _logger.LogError($"Details:Payment with ID {id} not found.");
-                return NotFound($"Payment with ID {id} not found.");
+                _logger.LogInformation($"Details: Payment with ID {id} not found.");
+                ViewBag.Message = $"Payment with ID {id} not found.";
+                return View("DetailsEmpty"); // أنشئ View جديد يعرض الرسالة
             }
+
             var model = new PaymentDetailsByIdViewModel
             {
                 PaymentID = payment.PaymentID,
@@ -87,8 +91,9 @@ namespace HotelManagement.Web.Controllers
                 InvoiceStatus = payment.InvoiceStatus.ToString()
             };
 
-            return View(model);
+            return View(model); // View يعرض تفاصيل الدفع
         }
+
 
 
         // GET: PaymentController/Create
